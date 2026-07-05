@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — لوحة المسوّق</title>
+<style>
+:root{
+  --teal:#00B5A6;--teal2:#008F83;--teall:#F0FAFA;--tealm:#C8EDEA;--tealtext:#007A70;
+  --navy:#1B2B4B;--navy2:#0F1E36;
+  --paper:#F5F7FA;--paper2:#ECEEF3;--paper3:#E2E6EE;
+  --white:#FFFFFF;--ink:#1B2B4B;--ink2:#3D536F;--ink3:#7A90A8;
+  --green:#059669;--greenl:#ECFDF5;--greenm:#6EE7B7;
+  --amber:#D97706;--amberl:#FFFBEB;--amberm:#FCD34D;
+  --red:#DC2626;--redl:#FEF2F2;--redm:#FCA5A5;
+  --blue:#2563EB;--bluel:#EFF6FF;
+  --purple:#7C3AED;--purplel:#F5F3FF;
+  --border:#DDE3EE;--shadow:0 1px 3px rgba(27,43,75,.08);--shadow2:0 4px 16px rgba(27,43,75,.1);
+  --sidebar:220px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--paper);color:var(--ink);direction:rtl;font-size:14px}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:4px}
+
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--navy2);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-icon svg{width:20px;height:20px}
+.logo-name{font-size:15px;font-weight:900;color:#fff;letter-spacing:-.5px}
+.logo-sub{font-size:9px;color:rgba(255,255,255,.35);margin-top:1px}
+.nav-section{padding:16px 10px 6px;font-size:9px;font-weight:800;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;margin:1px 6px;border-radius:8px;cursor:pointer;transition:all .15s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.06)}
+.nav-item.active{background:rgba(0,181,166,.18);border:1px solid rgba(0,181,166,.25)}
+.nav-icon{width:16px;height:16px;opacity:.5;flex-shrink:0}
+.nav-item.active .nav-icon{opacity:1}
+.nav-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.55)}
+.nav-item.active .nav-label{color:#fff;font-weight:700}
+.nav-badge{margin-right:auto;background:var(--teal);color:#fff;font-size:9px;font-weight:800;border-radius:10px;padding:1px 6px}
+.sidebar-user{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:9px}
+.user-av{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;background:var(--teal)}
+.user-name{font-size:11px;font-weight:700;color:#fff}
+.user-role{font-size:9px;color:rgba(255,255,255,.35)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.topbar-title{font-size:15px;font-weight:800;color:var(--navy)}
+.topbar-spacer{flex:1}
+.tb-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:9px;padding:7px 14px;font-size:11px;font-weight:700;background:var(--white);color:var(--ink2);cursor:pointer;transition:all .15s}
+.tb-btn:hover{background:var(--paper);color:var(--navy)}
+.tb-btn-teal{background:var(--teal);color:#fff;border-color:var(--teal)}
+.tb-btn-teal:hover{background:var(--teal2)}
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+
+/* SELLER PROFILE CARD */
+.seller-hero{background:var(--navy);border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden}
+.seller-hero::before{content:'';position:absolute;top:-60px;left:-40px;width:200px;height:200px;border-radius:50%;background:rgba(0,181,166,.07)}
+.seller-hero::after{content:'';position:absolute;bottom:-40px;right:-20px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.03)}
+.sh-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px}
+.sh-av{width:56px;height:56px;border-radius:14px;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 6px 16px rgba(0,181,166,.3)}
+.sh-info{flex:1}
+.sh-name{font-size:18px;font-weight:900;color:#fff;letter-spacing:-.4px}
+.sh-meta{font-size:11px;color:rgba(255,255,255,.45);margin-top:4px}
+.sh-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(0,181,166,.18);border:1px solid rgba(0,181,166,.3);border-radius:6px;padding:3px 10px;font-size:10px;font-weight:800;color:#5EEAD4;margin-top:6px}
+.sh-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sh-kpi{background:rgba(255,255,255,.06);border-radius:10px;padding:12px;text-align:center}
+.sh-kpi-v{font-size:17px;font-weight:900;color:#fff;line-height:1;margin-bottom:3px}
+.sh-kpi-l{font-size:9px;color:rgba(255,255,255,.35);font-weight:600}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:var(--white);border:1px solid var(--border);border-radius:11px;padding:4px;margin-bottom:18px;width:fit-content}
+.tab{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:700;color:var(--ink3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.tab.active{background:var(--teal);color:#fff;box-shadow:0 2px 8px rgba(0,181,166,.3)}
+.tab:hover:not(.active){background:var(--paper);color:var(--navy)}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+/* CARD */
+.card{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:18px;box-shadow:var(--shadow)}
+.card-t{background:var(--teall);border:1px solid var(--tealm);border-radius:13px;padding:18px}
+.card-dk{background:var(--navy);border-radius:13px;padding:18px}
+.card-title{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.card-title-action{font-size:10px;color:var(--teal2);font-weight:700;cursor:pointer}
+
+/* KPI */
+.kpi{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ka,var(--teal))}
+.kpi-v{font-size:22px;font-weight:900;color:var(--navy);line-height:1;margin-bottom:4px}
+.kpi-l{font-size:11px;color:var(--ink3);font-weight:600}
+.kpi-s{font-size:10px;margin-top:4px;font-weight:700}
+
+/* TABLE */
+.tw{overflow-x:auto;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--paper2);color:var(--navy);font-weight:800;font-size:10px;padding:10px 14px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;letter-spacing:.3px;text-transform:uppercase}
+td{padding:11px 14px;border-bottom:1px solid var(--paper2);color:var(--ink2);vertical-align:middle;line-height:1.5}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--paper)}
+.tb{font-weight:700;color:var(--navy)}
+.tg{font-weight:700;color:var(--green)}
+.tt{font-weight:700;color:var(--teal2)}
+.ta{font-weight:700;color:var(--amber)}
+.tr_{font-weight:700;color:var(--red)}
+
+/* STATUS */
+.st{display:inline-flex;align-items:center;gap:4px;border-radius:6px;padding:3px 9px;font-size:10px;font-weight:800}
+.st::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
+.st-active{background:var(--greenl);color:var(--green)}
+.st-pending{background:var(--amberl);color:var(--amber)}
+.st-paused{background:var(--paper2);color:var(--ink3)}
+.st-rejected{background:var(--redl);color:var(--red)}
+
+/* PRODUCT MINI */
+.prod-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--paper2)}
+.prod-row:last-child{border-bottom:none}
+.prod-ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.prod-name{font-size:12px;font-weight:700;color:var(--navy)}
+.prod-sub{font-size:10px;color:var(--ink3);margin-top:2px}
+.prod-price{font-size:13px;font-weight:800;color:var(--navy);flex-shrink:0}
+.prod-margin{font-size:10px;font-weight:800;border-radius:5px;padding:2px 7px;flex-shrink:0}
+
+/* COMMISSION BAR */
+.comm-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.comm-lbl{font-size:11px;color:var(--ink2);width:100px;flex-shrink:0;font-weight:600}
+.comm-bar-wrap{flex:1}
+.comm-bar{height:7px;background:var(--paper3);border-radius:8px;overflow:hidden}
+.comm-barf{height:100%;border-radius:8px;background:var(--teal)}
+.comm-val{font-size:11px;font-weight:800;color:var(--navy);width:60px;text-align:left;flex-shrink:0}
+
+/* ACTIVITY */
+.act-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--paper2)}
+.act-item:last-child{border-bottom:none}
+.act-ic{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.act-text{font-size:11px;color:var(--ink2);line-height:1.6}
+.act-text strong{color:var(--navy);font-weight:700}
+.act-time{font-size:10px;color:var(--ink3);margin-top:2px}
+
+/* CHART */
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:90px;margin-top:10px}
+.cb-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.cb-bar{width:100%;border-radius:4px 4px 0 0}
+.cb-lbl{font-size:9px;color:var(--ink3);font-weight:600;text-align:center}
+.cb-val{font-size:9px;color:var(--ink2);font-weight:700;text-align:center}
+
+/* BADGE */
+.b{display:inline-flex;align-items:center;gap:3px;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800}
+.bt{background:var(--teall);color:var(--teal2)}
+.bg{background:var(--greenl);color:var(--green)}
+.ba{background:var(--amberl);color:var(--amber)}
+.br{background:var(--redl);color:var(--red)}
+.bn{background:var(--paper3);color:var(--ink2)}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(15,30,54,.5);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.modal{background:var(--white);border-radius:16px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-hd{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.modal-title{font-size:14px;font-weight:800;color:var(--navy);flex:1}
+.modal-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+.modal-body{padding:18px 20px}
+.modal-ft{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.fi{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.fl{font-size:11px;font-weight:800;color:var(--navy)}
+.fh{font-size:10px;color:var(--ink3)}
+.fi input,.fi select,.fi textarea{border:1px solid var(--border);border-radius:9px;padding:8px 12px;font-size:12px;color:var(--ink);background:var(--paper);outline:none;direction:rtl;font-family:inherit;transition:border-color .15s}
+.fi input:focus,.fi select:focus,.fi textarea:focus{border-color:var(--teal);background:var(--white)}
+.fi textarea{resize:none}
+.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-teal:hover{background:var(--teal2)}
+.btn-out{background:transparent;border:1px solid var(--border);color:var(--ink2)}
+.btn-out:hover{background:var(--paper)}
+.btn-sm{padding:6px 12px;font-size:11px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+@media(max-width:1100px){.g2,.g3{grid-template-columns:1fr}.sh-kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.sidebar{display:none}.content{padding:14px}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="medflow-nav.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+        <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-name">ميدفلو</div><div class="logo-sub">النظام المتكامل</div></div>
+      </a>
+    </div>
+    <div class="nav-section">الرئيسية</div>
+    <a href="medflow-dashboard.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">لوحة التحكم</span></a>
+    <div class="nav-section">الطلبيات</div>
+    <a href="medflow-orders-list.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">جميع الطلبات</span></a>
+    <a href="medflow-rfq.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 6h8M2 9h10M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">سوق الطلبيات</span></a>
+    <div class="nav-section">المستودع</div>
+    <a href="medflow-products.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M1 6l7-4 7 4v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المنتجات</span></a>
+    <a href="medflow-inventory.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">المخزون</span></a>
+    <a href="medflow-sfda.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1l6 3v4c0 3.5-2.5 6.5-6 7.5C2.5 14.5 0 11.5 0 8V4l8-3Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">امتثال SFDA</span></a>
+    <div class="nav-section">الأطراف</div>
+    <a href="medflow-clients.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="10" r="3" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العملاء</span></a>
+    <a href="medflow-seller.html" class="nav-item active"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المسوّقون</span></a>
+    <a href="medflow-contracts.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h6M5 12h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العقود</span></a>
+    <div class="nav-section">المالية</div>
+    <a href="medflow-finance.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#fff" stroke-width="1.2"/><path d="M1 7h14" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">التسوية المالية</span></a>
+    <a href="medflow-invoices.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">الفواتير</span></a>
+    <a href="medflow-reports.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 7l3 3 5-7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">التقارير</span></a>
+    <div class="nav-section">النظام</div>
+    <a href="medflow-onboarding.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M8 5v6M5 8h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">تسجيل مسوّق</span></a>
+    <a href="medflow-settings.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="#fff" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">الإعدادات</span></a>
+    <a href="medflow-nav.html" class="nav-item" style="margin-top:auto"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">خريطة النظام</span></a>
+
+    <div class="sidebar-user">
+      <div class="user-av">جه</div>
+      <div><div class="user-name">جهاد اللهيبي</div><div class="user-role">مستودع مرخص · مكة</div></div>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title">ملف المسوّق — جهاد اللهيبي</div>
+    <div class="topbar-spacer"></div>
+    <button class="tb-btn btn-sm" onclick="openEdit()">✏️ تعديل البيانات</button>
+    <button class="tb-btn tb-btn-teal btn-sm" onclick="openAddProduct()">+ إضافة منتج</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SELLER HERO -->
+    <div class="seller-hero">
+      <div class="sh-top">
+        <div class="sh-av">جه</div>
+        <div class="sh-info">
+          <div class="sh-name">جهاد اللهيبي</div>
+          <div class="sh-meta">مستلزمات طبية · الرياض · عضو منذ يناير 2026</div>
+          <div class="sh-meta" style="margin-top:3px">📱 0501234567 &nbsp;·&nbsp; ✉️ jehad@medflow.sa</div>
+          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+            <div class="sh-badge">✓ موثّق</div>
+            <div class="sh-badge" style="background:rgba(253,230,138,.1);border-color:rgba(253,230,138,.25);color:#FDE68A">⭐ تقييم 4.8</div>
+            <div class="sh-badge" style="background:rgba(134,239,172,.08);border-color:rgba(134,239,172,.2);color:#86EFAC">🟢 نشط</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px;flex-shrink:0">
+          <button class="btn btn-teal btn-sm" onclick="showToast('تم إرسال رسالة ✓')">💬 مراسلة</button>
+          <button class="btn btn-out btn-sm" onclick="showToast('جارٍ تنزيل العقد...')">📄 العقد</button>
+        </div>
+      </div>
+      <div class="sh-kpis">
+        <div class="sh-kpi"><div class="sh-kpi-v">142K ﷼</div><div class="sh-kpi-l">مبيعات هذا الشهر</div></div>
+        <div class="sh-kpi"><div class="sh-kpi-v">12</div><div class="sh-kpi-l">منتج نشط</div></div>
+        <div class="sh-kpi"><div class="sh-kpi-v">89</div><div class="sh-kpi-l">طلب مكتمل</div></div>
+        <div class="sh-kpi"><div class="sh-kpi-v">14,200 ﷼</div><div class="sh-kpi-l">عمولة مستحقة</div></div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('overview',this)">نظرة عامة</div>
+      <div class="tab" onclick="switchTab('products',this)">المنتجات</div>
+      <div class="tab" onclick="switchTab('orders',this)">الطلبات</div>
+      <div class="tab" onclick="switchTab('finance',this)">المالية</div>
+      <div class="tab" onclick="switchTab('contract',this)">العقد والاشتراطات</div>
+    </div>
+
+    <!-- TAB: OVERVIEW -->
+    <div id="tab-overview">
+      <div class="g3" style="margin-bottom:16px">
+        <div class="kpi" style="--ka:var(--teal)">
+          <div class="kpi-v">1,020K ﷼</div>
+          <div class="kpi-l">إجمالي المبيعات منذ البداية</div>
+          <div class="kpi-s" style="color:var(--green)">↑ 18% مقارنة الشهر الماضي</div>
+        </div>
+        <div class="kpi" style="--ka:var(--green)">
+          <div class="kpi-v">102K ﷼</div>
+          <div class="kpi-l">إجمالي العمولات المدفوعة</div>
+          <div class="kpi-s" style="color:var(--tealtext)">معدل 10% من المبيعات</div>
+        </div>
+        <div class="kpi" style="--ka:var(--amber)">
+          <div class="kpi-v">14,200 ﷼</div>
+          <div class="kpi-l">عمولة مستحقة هذا الشهر</div>
+          <div class="kpi-s" style="color:var(--amber)">تُدفع في 30 يوليو</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <!-- SALES CHART -->
+        <div class="card">
+          <div class="card-title">📈 المبيعات الأسبوعية (﷼)</div>
+          <div class="chart-bars">
+            <div class="cb-col"><div class="cb-val">18K</div><div class="cb-bar" style="height:43%;background:var(--tealm)"></div><div class="cb-lbl">أحد</div></div>
+            <div class="cb-col"><div class="cb-val">24K</div><div class="cb-bar" style="height:57%;background:var(--tealm)"></div><div class="cb-lbl">اثنين</div></div>
+            <div class="cb-col"><div class="cb-val">21K</div><div class="cb-bar" style="height:50%;background:var(--tealm)"></div><div class="cb-lbl">ثلاثاء</div></div>
+            <div class="cb-col"><div class="cb-val">38K</div><div class="cb-bar" style="height:90%;background:var(--teal)"></div><div class="cb-lbl">أربعاء</div></div>
+            <div class="cb-col"><div class="cb-val" style="color:var(--tealtext);font-weight:800">41K</div><div class="cb-bar" style="height:100%;background:var(--teal);box-shadow:0 0 0 2px var(--teal) inset;border-radius:4px 4px 0 0"></div><div class="cb-lbl" style="color:var(--tealtext);font-weight:800">اليوم</div></div>
+            <div class="cb-col"><div class="cb-val">—</div><div class="cb-bar" style="height:6%;background:var(--paper3)"></div><div class="cb-lbl">جمعة</div></div>
+            <div class="cb-col"><div class="cb-val">—</div><div class="cb-bar" style="height:6%;background:var(--paper3)"></div><div class="cb-lbl">سبت</div></div>
+          </div>
+        </div>
+
+        <!-- ACTIVITY -->
+        <div class="card">
+          <div class="card-title">🕐 آخر الأنشطة</div>
+          <div>
+            <div class="act-item">
+              <div class="act-ic" style="background:var(--greenl)">✅</div>
+              <div><div class="act-text">تم تسليم طلب <strong>#ORD-1042</strong> — قفازات لاتكس</div><div class="act-time">منذ 14 دقيقة</div></div>
+            </div>
+            <div class="act-item">
+              <div class="act-ic" style="background:var(--bluel)">📦</div>
+              <div><div class="act-text">أودع <strong>200 علبة باراسيتامول</strong> في المستودع</div><div class="act-time">منذ 3 ساعات</div></div>
+            </div>
+            <div class="act-item">
+              <div class="act-ic" style="background:var(--amberl)">💰</div>
+              <div><div class="act-text">تسوية مالية بقيمة <strong>12,400 ﷼</strong> — يونيو 2026</div><div class="act-time">أمس</div></div>
+            </div>
+            <div class="act-item">
+              <div class="act-ic" style="background:var(--purplel)">🆕</div>
+              <div><div class="act-text">أضاف منتج جديد: <strong>أوميغا 3 — 60 كبسولة</strong></div><div class="act-time">منذ يومين</div></div>
+            </div>
+            <div class="act-item">
+              <div class="act-ic" style="background:var(--teall)">⭐</div>
+              <div><div class="act-text">حصل على تقييم <strong>5/5</strong> من صيدلية الشفاء</div><div class="act-time">منذ 3 أيام</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PRODUCTS -->
+    <div id="tab-products" style="display:none">
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>المنتج</th>
+              <th>الفئة</th>
+              <th>سعر البيع</th>
+              <th>المخزون</th>
+              <th>المبيعات</th>
+              <th>الهامش</th>
+              <th>الحالة</th>
+              <th>إجراء</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div style="font-weight:700;color:var(--navy)">🧤 قفازات طبية لاتكس M</div><div style="font-size:10px;color:var(--ink3)">SA-2024-0234567</div></td>
+              <td><span class="b bt">مستلزمات</span></td>
+              <td class="tt">250 ﷼/علبة</td>
+              <td class="tb">187 علبة</td>
+              <td class="tg">654 وحدة</td>
+              <td><span class="b bg">36%</span></td>
+              <td><span class="st st-active">نشط</span></td>
+              <td><button class="btn btn-out btn-sm" onclick="showToast('فتح تفاصيل المنتج')">تفاصيل</button></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:700;color:var(--navy)">💊 باراسيتامول 500mg</div><div style="font-size:10px;color:var(--ink3)">SA-2024-0123456</div></td>
+              <td><span class="b" style="background:var(--bluel);color:var(--blue)">أدوية</span></td>
+              <td class="tt">41 ﷼/علبة</td>
+              <td class="ta">48 علبة ⚠️</td>
+              <td class="tg">892 وحدة</td>
+              <td><span class="b bg">46%</span></td>
+              <td><span class="st st-active">نشط</span></td>
+              <td><button class="btn btn-out btn-sm" onclick="showToast('فتح تفاصيل المنتج')">تفاصيل</button></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:700;color:var(--navy)">🐟 أوميغا 3 — 60 كبسولة</div><div style="font-size:10px;color:var(--ink3)">SA-2024-0567890</div></td>
+              <td><span class="b" style="background:var(--bluel);color:var(--blue)">أدوية</span></td>
+              <td class="tt">130 ﷼/علبة</td>
+              <td class="tb">320 علبة</td>
+              <td class="tg">538 وحدة</td>
+              <td><span class="b bg">37%</span></td>
+              <td><span class="st st-active">نشط</span></td>
+              <td><button class="btn btn-out btn-sm" onclick="showToast('فتح تفاصيل المنتج')">تفاصيل</button></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:700;color:var(--navy)">✨ كريم فيتامين C طبي</div><div style="font-size:10px;color:var(--ink3)">SA-2023-0345678</div></td>
+              <td><span class="b" style="background:var(--purplel);color:var(--purple)">تجميل طبي</span></td>
+              <td class="tt">300 ﷼/قطعة</td>
+              <td class="tb">210 قطعة</td>
+              <td class="tg">421 وحدة</td>
+              <td><span class="b bg">35%</span></td>
+              <td><span class="st st-pending">قيد المراجعة</span></td>
+              <td><button class="btn btn-out btn-sm" onclick="showToast('فتح تفاصيل المنتج')">تفاصيل</button></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:700;color:var(--navy)">🩹 ضمادات معقمة 10×15</div><div style="font-size:10px;color:var(--ink3)">SA-2024-0456789</div></td>
+              <td><span class="b bt">مستلزمات</span></td>
+              <td class="tt">75 ﷼/حزمة</td>
+              <td class="tb">1,200 حزمة</td>
+              <td class="tg">1,203 وحدة</td>
+              <td><span class="b bg">36%</span></td>
+              <td><span class="st st-active">نشط</span></td>
+              <td><button class="btn btn-out btn-sm" onclick="showToast('فتح تفاصيل المنتج')">تفاصيل</button></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:700;color:var(--navy)">🔬 محقنة 5ml معقمة</div><div style="font-size:10px;color:var(--ink3)">SA-2024-0789012</div></td>
+              <td><span class="b bt">مستلزمات</span></td>
+              <td class="tt">15 ﷼/قطعة</td>
+              <td class="tb">5,000 قطعة</td>
+              <td class="tg">3,201 وحدة</td>
+              <td><span class="b bg">47%</span></td>
+              <td><span class="st st-paused">موقوف</span></td>
+              <td><button class="btn btn-teal btn-sm" onclick="showToast('تم تفعيل المنتج ✓')">تفعيل</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB: ORDERS -->
+    <div id="tab-orders" style="display:none">
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>رقم الطلب</th><th>المنتج</th><th>المشتري</th><th>الكمية</th><th>القيمة</th><th>العمولة</th><th>الحالة</th><th>التاريخ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="tb">#ORD-1042</td><td>قفازات لاتكس M</td><td>صيدلية الشفاء</td><td>50 علبة</td><td class="tt">12,500 ﷼</td><td class="tg">1,250 ﷼</td><td><span class="st st-active">مكتمل</span></td><td style="color:var(--ink3)">اليوم</td></tr>
+            <tr><td class="tb">#ORD-1038</td><td>أوميغا 3</td><td>مستشفى الملك فيصل</td><td>150 علبة</td><td class="tt">19,500 ﷼</td><td class="tg">1,950 ﷼</td><td><span class="st st-pending">مشكلة</span></td><td style="color:var(--ink3)">أمس</td></tr>
+            <tr><td class="tb">#ORD-1031</td><td>باراسيتامول 500mg</td><td>عيادة النور</td><td>200 علبة</td><td class="tt">8,200 ﷼</td><td class="tg">820 ﷼</td><td><span class="st st-active">مكتمل</span></td><td style="color:var(--ink3)">منذ 3 أيام</td></tr>
+            <tr><td class="tb">#ORD-1025</td><td>ضمادات معقمة</td><td>مركز صحي الرياض</td><td>500 حزمة</td><td class="tt">37,500 ﷼</td><td class="tg">3,750 ﷼</td><td><span class="st st-active">مكتمل</span></td><td style="color:var(--ink3)">منذ 5 أيام</td></tr>
+            <tr><td class="tb">#ORD-1019</td><td>قفازات لاتكس M</td><td>مستشفى الأمل</td><td>100 علبة</td><td class="tt">25,000 ﷼</td><td class="tg">2,500 ﷼</td><td><span class="st st-active">مكتمل</span></td><td style="color:var(--ink3)">منذ أسبوع</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB: FINANCE -->
+    <div id="tab-finance" style="display:none">
+      <div class="g2" style="margin-bottom:16px">
+        <div class="card-t">
+          <div class="card-title" style="color:var(--navy)">💰 ملخص مالي</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--tealm)"><span style="font-size:12px;color:var(--ink2)">إجمالي المبيعات</span><span style="font-size:14px;font-weight:900;color:var(--navy)">142,000 ﷼</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--tealm)"><span style="font-size:12px;color:var(--ink2)">عمولة ميدفلو (10%)</span><span style="font-size:14px;font-weight:900;color:var(--red)">▼ 14,200 ﷼</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--tealm)"><span style="font-size:12px;color:var(--ink2)">رسوم تخزين</span><span style="font-size:14px;font-weight:900;color:var(--red)">▼ 2,100 ﷼</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--tealm)"><span style="font-size:12px;color:var(--ink2)">رسوم شحن</span><span style="font-size:14px;font-weight:900;color:var(--red)">▼ 890 ﷼</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0"><span style="font-size:13px;font-weight:800;color:var(--navy)">صافي المسوّق</span><span style="font-size:18px;font-weight:900;color:var(--green)">124,810 ﷼</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">📅 سجل التسويات</div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--paper2)"><div><div style="font-size:12px;font-weight:700;color:var(--navy)">تسوية يونيو 2026</div><div style="font-size:10px;color:var(--ink3)">30 يونيو 2026</div></div><span style="font-size:14px;font-weight:800;color:var(--green)">12,400 ﷼</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--paper2)"><div><div style="font-size:12px;font-weight:700;color:var(--navy)">تسوية مايو 2026</div><div style="font-size:10px;color:var(--ink3)">31 مايو 2026</div></div><span style="font-size:14px;font-weight:800;color:var(--green)">10,800 ﷼</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--paper2)"><div><div style="font-size:12px;font-weight:700;color:var(--navy)">تسوية أبريل 2026</div><div style="font-size:10px;color:var(--ink3)">30 أبريل 2026</div></div><span style="font-size:14px;font-weight:800;color:var(--green)">9,200 ﷼</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0"><div><div style="font-size:12px;font-weight:700;color:var(--navy)">تسوية مارس 2026</div><div style="font-size:10px;color:var(--ink3)">31 مارس 2026</div></div><span style="font-size:14px;font-weight:800;color:var(--green)">8,600 ﷼</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 توزيع العمولات حسب الفئة</div>
+        <div>
+          <div class="comm-row"><span class="comm-lbl">مستلزمات طبية</span><div class="comm-bar-wrap"><div class="comm-bar"><div class="comm-barf" style="width:68%"></div></div></div><span class="comm-val">9,656 ﷼</span></div>
+          <div class="comm-row"><span class="comm-lbl">أدوية</span><div class="comm-bar-wrap"><div class="comm-bar"><div class="comm-barf" style="width:45%;background:var(--blue)"></div></div></div><span class="comm-val">6,390 ﷼</span></div>
+          <div class="comm-row"><span class="comm-lbl">تجميل طبي</span><div class="comm-bar-wrap"><div class="comm-bar"><div class="comm-barf" style="width:24%;background:var(--purple)"></div></div></div><span class="comm-val">3,408 ﷼</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: CONTRACT -->
+    <div id="tab-contract" style="display:none">
+      <div class="g2">
+        <div class="card">
+          <div class="card-title">📋 بيانات العقد</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-bottom:1px solid var(--paper2)"><span style="color:var(--ink3)">تاريخ التوقيع</span><span style="font-weight:700;color:var(--navy)">15 يناير 2026</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-bottom:1px solid var(--paper2)"><span style="color:var(--ink3)">نوع العقد</span><span style="font-weight:700;color:var(--navy)">سنوي قابل للتجديد</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-bottom:1px solid var(--paper2)"><span style="color:var(--ink3)">نسبة العمولة</span><span style="font-weight:700;color:var(--teal2)">10% من صافي المبيعات</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-bottom:1px solid var(--paper2)"><span style="color:var(--ink3)">رسوم التخزين</span><span style="font-weight:700;color:var(--teal2)">2 ﷼/وحدة/شهر</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-bottom:1px solid var(--paper2)"><span style="color:var(--ink3)">دورة التسوية</span><span style="font-weight:700;color:var(--navy)">شهرية (آخر كل شهر)</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0"><span style="color:var(--ink3)">انتهاء العقد</span><span style="font-weight:700;color:var(--amber)">15 يناير 2027</span></div>
+          </div>
+          <button class="btn btn-teal btn-sm" style="margin-top:14px;width:100%;justify-content:center" onclick="showToast('جارٍ تنزيل العقد...')">📄 تنزيل نسخة العقد</button>
+        </div>
+        <div class="card">
+          <div class="card-title">✅ الاشتراطات</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:9px;background:var(--greenl);border-radius:9px"><span style="color:var(--green);font-size:14px;flex-shrink:0">✓</span><div><div style="font-size:12px;font-weight:700;color:var(--navy)">ترخيص SFDA ساري</div><div style="font-size:10px;color:var(--ink3);margin-top:2px">جميع المنتجات موثقة ومعتمدة</div></div></div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:9px;background:var(--greenl);border-radius:9px"><span style="color:var(--green);font-size:14px;flex-shrink:0">✓</span><div><div style="font-size:12px;font-weight:700;color:var(--navy)">سجل تجاري ساري</div><div style="font-size:10px;color:var(--ink3);margin-top:2px">منتهي في 2027/06/30</div></div></div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:9px;background:var(--greenl);border-radius:9px"><span style="color:var(--green);font-size:14px;flex-shrink:0">✓</span><div><div style="font-size:12px;font-weight:700;color:var(--navy)">تقييم المشترين ≥ 4.0</div><div style="font-size:10px;color:var(--ink3);margin-top:2px">التقييم الحالي: 4.8 ⭐</div></div></div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:9px;background:var(--amberl);border-radius:9px"><span style="color:var(--amber);font-size:14px;flex-shrink:0">⚠</span><div><div style="font-size:12px;font-weight:700;color:var(--navy)">تجديد ترخيص منتج</div><div style="font-size:10px;color:var(--ink3);margin-top:2px">باراسيتامول 500mg — ينتهي في 2026/09</div></div></div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:9px;background:var(--greenl);border-radius:9px"><span style="color:var(--green);font-size:14px;flex-shrink:0">✓</span><div><div style="font-size:12px;font-weight:700;color:var(--navy)">اشتراط الصلاحية ≥ 6 أشهر</div><div style="font-size:10px;color:var(--ink3);margin-top:2px">كل المنتجات المودعة مستوفية</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-ov" id="editModal">
+  <div class="modal">
+    <div class="modal-hd">
+      <span style="font-size:20px">✏️</span>
+      <span class="modal-title">تعديل بيانات المسوّق</span>
+      <div class="modal-close" onclick="closeModal('editModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="fi-row">
+        <div class="fi"><label class="fl">الاسم الكامل</label><input type="text" value="جهاد اللهيبي"></div>
+        <div class="fi"><label class="fl">رقم الجوال</label><input type="text" value="0501234567"></div>
+      </div>
+      <div class="fi"><label class="fl">البريد الإلكتروني</label><input type="email" value="jehad@medflow.sa"></div>
+      <div class="fi-row">
+        <div class="fi"><label class="fl">المدينة</label><select><option>الرياض</option><option>جدة</option><option>مكة</option></select></div>
+        <div class="fi"><label class="fl">التخصص</label><select><option>مستلزمات طبية</option><option>أدوية</option><option>تجميل طبي</option></select></div>
+      </div>
+      <div class="fi"><label class="fl">ملاحظات</label><textarea rows="3" placeholder="أي ملاحظات خاصة..."></textarea></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-out" onclick="closeModal('editModal')">إلغاء</button>
+      <button class="btn btn-teal" onclick="closeModal('editModal');showToast('تم حفظ التعديلات ✓')">حفظ التعديلات</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PRODUCT MODAL -->
+<div class="modal-ov" id="addModal">
+  <div class="modal">
+    <div class="modal-hd">
+      <span style="font-size:20px">📦</span>
+      <span class="modal-title">إضافة منتج جديد</span>
+      <div class="modal-close" onclick="closeModal('addModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="fi"><label class="fl">اسم المنتج</label><input type="text" placeholder="مثال: باراسيتامول 500mg"></div>
+      <div class="fi-row">
+        <div class="fi"><label class="fl">الفئة</label><select><option>مستلزمات طبية</option><option>أدوية</option><option>تجميل طبي</option></select></div>
+        <div class="fi"><label class="fl">الوحدة</label><select><option>علبة</option><option>قطعة</option><option>حزمة</option><option>كرتون</option></select></div>
+      </div>
+      <div class="fi-row">
+        <div class="fi"><label class="fl">سعر البيع (﷼)</label><input type="number" placeholder="0"></div>
+        <div class="fi"><label class="fl">الكمية المتاحة</label><input type="number" placeholder="0"></div>
+      </div>
+      <div class="fi"><label class="fl">رقم ترخيص SFDA</label><input type="text" placeholder="SA-XXXX-XXXXXXX"><span class="fh">إلزامي — لن يُنشر المنتج بدونه</span></div>
+      <div class="fi"><label class="fl">تاريخ انتهاء الصلاحية</label><input type="date"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-out" onclick="closeModal('addModal')">إلغاء</button>
+      <button class="btn btn-teal" onclick="closeModal('addModal');showToast('تم إرسال المنتج للمراجعة ✓')">إرسال للمراجعة</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function switchTab(id, el) {
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+  document.getElementById('tab-' + id).style.display = 'block';
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+function openEdit() { document.getElementById('editModal').classList.add('open'); }
+function openAddProduct() { document.getElementById('addModal').classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>

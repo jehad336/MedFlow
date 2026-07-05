@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — تسجيل مسوّق جديد</title>
+<style>
+:root{--teal:#00B5A6;--teal2:#008F83;--teall:#F0FAFA;--tealm:#C8EDEA;--navy:#1B2B4B;--navy2:#0F1E36;--paper:#F5F7FA;--paper2:#ECEEF3;--paper3:#E2E6EE;--white:#fff;--ink:#1B2B4B;--ink2:#3D536F;--ink3:#7A90A8;--green:#059669;--greenl:#ECFDF5;--amber:#D97706;--amberl:#FFFBEB;--red:#DC2626;--redl:#FEF2F2;--border:#DDE3EE;--shadow:0 1px 3px rgba(27,43,75,.08);--shadow2:0 6px 20px rgba(27,43,75,.11)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--paper);color:var(--ink);direction:rtl;font-size:14px}
+.page{max-width:680px;margin:0 auto;padding:32px 24px}
+.logo-row{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.logo-ic{width:40px;height:40px;background:var(--teal);border-radius:11px;display:flex;align-items:center;justify-content:center}
+.logo-name{font-size:20px;font-weight:900;color:var(--navy)}
+/* STEPS */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:32px;overflow:hidden}
+.step{display:flex;align-items:center;flex:1}
+.step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;transition:all .3s;border:2px solid var(--border);background:var(--white);color:var(--ink3)}
+.step-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+.step-dot.active{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 0 0 4px rgba(0,181,166,.15)}
+.step-line{flex:1;height:2px;background:var(--paper3)}
+.step-line.done{background:var(--green)}
+.step-label{font-size:10px;color:var(--ink3);font-weight:600;margin-top:5px;text-align:center;white-space:nowrap}
+.step-wrap{display:flex;flex-direction:column;align-items:center}
+/* FORM CARD */
+.form-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow);margin-bottom:16px}
+.form-title{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.form-sub{font-size:12px;color:var(--ink3);margin-bottom:20px;line-height:1.6}
+.fi{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fl{font-size:11px;font-weight:800;color:var(--navy)}
+.fh{font-size:10px;color:var(--ink3);margin-top:2px}
+.fi input,.fi select,.fi textarea{border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:13px;color:var(--ink);background:var(--paper);outline:none;direction:rtl;font-family:inherit;transition:border-color .15s;width:100%}
+.fi input:focus,.fi select:focus,.fi textarea:focus{border-color:var(--teal);background:var(--white)}
+/* UPLOAD */
+.upload-box{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .15s;background:var(--paper)}
+.upload-box:hover{border-color:var(--teal);background:var(--teall)}
+.upload-icon{font-size:32px;margin-bottom:8px}
+.upload-title{font-size:13px;font-weight:700;color:var(--navy)}
+.upload-sub{font-size:11px;color:var(--ink3);margin-top:4px}
+/* CONTRACT */
+.contract-box{background:var(--paper2);border-radius:12px;padding:18px;margin-bottom:16px;font-size:12px;color:var(--ink2);line-height:1.9;max-height:200px;overflow-y:auto}
+.contract-box h4{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:8px}
+/* COMMISSION PICKER */
+.comm-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.comm-opt{border:2px solid var(--border);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all .15s;background:var(--white)}
+.comm-opt:hover{border-color:var(--tealm);background:var(--teall)}
+.comm-opt.selected{border-color:var(--teal);background:var(--teall)}
+.comm-pct{font-size:22px;font-weight:900;color:var(--navy)}
+.comm-lbl{font-size:10px;color:var(--ink3);margin-top:4px;font-weight:600}
+/* FOOTER */
+.form-footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:9px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit}
+.btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:var(--teal2)}
+.btn-out{background:transparent;border:1px solid var(--border);color:var(--ink2)}.btn-out:hover{background:var(--paper)}
+/* SUCCESS */
+.success-wrap{text-align:center;padding:48px 20px}
+.success-icon{font-size:64px;margin-bottom:16px}
+.success-title{font-size:22px;font-weight:900;color:var(--navy);margin-bottom:8px}
+.success-sub{font-size:13px;color:var(--ink3);line-height:1.7;max-width:380px;margin:0 auto 24px}
+.b{display:inline-flex;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800}
+.bg{background:var(--greenl);color:var(--green)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:700;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div style="background:var(--navy2);padding:0 24px;height:48px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100">
+  <a href="medflow-nav.html" style="display:flex;align-items:center;gap:8px;text-decoration:none">
+    <div style="width:28px;height:28px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span style="font-size:13px;font-weight:900;color:#fff">ميدفلو</span>
+  </a>
+  <span style="color:rgba(255,255,255,.2)">|</span>
+  <a href="medflow-dashboard.html" style="font-size:11px;color:rgba(255,255,255,.5);text-decoration:none">لوحة التحكم</a>
+  <a href="medflow-seller.html" style="font-size:11px;color:rgba(255,255,255,.5);text-decoration:none">المسوّقون</a>
+  <a href="medflow-contracts.html" style="font-size:11px;color:rgba(255,255,255,.5);text-decoration:none">العقود</a>
+  <div style="flex:1"></div>
+  <span style="font-size:11px;color:rgba(255,255,255,.4)">تسجيل مسوّق جديد</span>
+  <a href="medflow-nav.html" style="font-size:11px;color:var(--teal);text-decoration:none;font-weight:700">🗺️ خريطة النظام</a>
+</div>
+
+<div class="page">
+  <div class="logo-row">
+    <div class="logo-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="logo-name">ميدفلو</div>
+    <a href="medflow-dashboard.html" style="margin-right:auto;font-size:11px;color:var(--ink3);text-decoration:none">← الرئيسية</a>
+  </div>
+
+  <!-- STEPS -->
+  <div style="margin-bottom:28px">
+    <div class="steps" id="stepsRow"></div>
+    <div style="display:flex;justify-content:space-around;margin-top:6px" id="stepsLabels"></div>
+  </div>
+
+  <!-- STEP CONTENT -->
+  <div id="stepContent"></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const steps=[
+  {label:'البيانات'},
+  {label:'المستندات'},
+  {label:'العقد'},
+  {label:'التفعيل'},
+];
+let current=0;
+let selectedComm=10;
+
+function renderSteps(){
+  document.getElementById('stepsRow').innerHTML=steps.map((s,i)=>`
+    ${i>0?`<div class="step-line ${i<=current?'done':''}"></div>`:''}
+    <div class="step-wrap">
+      <div class="step-dot ${i<current?'done':i===current?'active':''}">${i<current?'✓':i+1}</div>
+    </div>
+  `).join('');
+  document.getElementById('stepsLabels').innerHTML=steps.map((s,i)=>`
+    <div class="step-label" style="color:${i===current?'var(--teal2)':i<current?'var(--green)':'var(--ink3)'};font-weight:${i===current?'800':'600'}">${s.label}</div>
+  `).join('');
+}
+
+function renderContent(){
+  const c=document.getElementById('stepContent');
+  if(current===0){
+    c.innerHTML=`
+      <div class="form-card">
+        <div class="form-title">👤 بيانات المسوّق</div>
+        <div class="form-sub">أدخل بياناتك الأساسية للتسجيل في منصة ميدفلو</div>
+        <div class="fi-row">
+          <div class="fi"><label class="fl">الاسم الكامل</label><input type="text" placeholder="الاسم الثلاثي"></div>
+          <div class="fi"><label class="fl">رقم الجوال</label><input type="tel" placeholder="05XXXXXXXX"></div>
+        </div>
+        <div class="fi"><label class="fl">البريد الإلكتروني</label><input type="email" placeholder="example@email.com"></div>
+        <div class="fi-row">
+          <div class="fi"><label class="fl">المدينة</label><select><option>مكة المكرمة</option><option>الرياض</option><option>جدة</option><option>الدمام</option><option>المدينة المنورة</option></select></div>
+          <div class="fi"><label class="fl">تخصص المنتجات</label><select><option>أدوية</option><option>مستلزمات طبية</option><option>تجميل طبي</option><option>متعدد</option></select></div>
+        </div>
+        <div class="fi"><label class="fl">اسم الشركة / المنشأة</label><input type="text" placeholder="اسم الشركة الرسمي"></div>
+        <div class="fi"><label class="fl">العنوان التفصيلي</label><input type="text" placeholder="الحي، الشارع، رقم المبنى..."></div>
+      </div>
+      <div class="form-card">
+        <div class="form-title">💰 نسبة العمولة</div>
+        <div class="form-sub">اختر نسبة العمولة التي ستُخصم من كل صفقة لصالح ميدفلو</div>
+        <div class="comm-options">
+          <div class="comm-opt ${selectedComm===8?'selected':''}" onclick="selectComm(8,this)"><div class="comm-pct">8%</div><div class="comm-lbl">للبداية</div></div>
+          <div class="comm-opt ${selectedComm===10?'selected':''}" onclick="selectComm(10,this)"><div class="comm-pct">10%</div><div class="comm-lbl">الأكثر شيوعاً</div></div>
+          <div class="comm-opt ${selectedComm===12?'selected':''}" onclick="selectComm(12,this)"><div class="comm-pct">12%</div><div class="comm-lbl">مزايا إضافية</div></div>
+        </div>
+        <div style="font-size:11px;color:var(--ink3);background:var(--teall);border-radius:9px;padding:10px;line-height:1.7">💡 رسوم التخزين منفصلة: 2 ﷼/وحدة/شهر · رسوم الشحن: 15-50 ﷼/طلب</div>
+      </div>
+    `;
+  } else if(current===1){
+    c.innerHTML=`
+      <div class="form-card">
+        <div class="form-title">📄 المستندات المطلوبة</div>
+        <div class="form-sub">ارفع المستندات التالية للتحقق من هويتك وترخيصك</div>
+        ${[
+          {icon:'🪪',title:'السجل التجاري',sub:'نسخة سارية المفعول — PDF أو صورة'},
+          {icon:'🛡️',title:'ترخيص SFDA',sub:'ترخيص توزيع المنتجات الطبية'},
+          {icon:'📋',title:'الهوية الوطنية',sub:'هوية صاحب المنشأة'},
+          {icon:'🏦',title:'الحساب البنكي',sub:'IBAN لاستلام التسويات الشهرية'},
+        ].map(d=>`
+          <div class="upload-box" style="margin-bottom:10px" onclick="showToast('اختيار ملف: ${d.title}')">
+            <div class="upload-icon">${d.icon}</div>
+            <div class="upload-title">${d.title}</div>
+            <div class="upload-sub">${d.sub}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } else if(current===2){
+    c.innerHTML=`
+      <div class="form-card">
+        <div class="form-title">📑 عقد الشراكة</div>
+        <div class="form-sub">اقرأ العقد بعناية قبل التوقيع</div>
+        <div class="contract-box">
+          <h4>عقد شراكة توزيع — شركة ميدفلو المحدودة</h4>
+          <p>بموجب هذا العقد، يتفق الطرفان على ما يلي:</p>
+          <p><strong>أولاً: التزامات المسوّق</strong><br>
+          يلتزم المسوّق بتوفير منتجات طبية مرخصة من هيئة الغذاء والدواء (SFDA)، وأن تكون جميع المنتجات بصلاحية لا تقل عن 6 أشهر عند إيداعها في المستودع.</p>
+          <p><strong>ثانياً: التزامات ميدفلو</strong><br>
+          تلتزم ميدفلو بتخزين المنتجات وفق اشتراطات SFDA، وتوزيعها على المشترين، واحتجاز المبالغ في نظام Escrow الآمن حتى تأكيد الاستلام.</p>
+          <p><strong>ثالثاً: العمولة والتسوية</strong><br>
+          تُخصم نسبة ${selectedComm}% من كل صفقة كعمولة لميدفلو، بالإضافة إلى رسوم التخزين 2 ﷼/وحدة/شهر. تتم التسوية في آخر كل شهر ميلادي.</p>
+          <p><strong>رابعاً: حل النزاعات</strong><br>
+          في حال نشوء أي نزاع، يتدخل فريق ميدفلو للتحكيم خلال 48 ساعة عمل. يبقى المبلغ محجوزاً في Escrow حتى حل النزاع.</p>
+          <p><strong>خامساً: مدة العقد</strong><br>
+          سنة قابلة للتجديد التلقائي ما لم يُبلَّغ أحد الطرفين برغبته في إنهاء العقد قبل 30 يوم من الانتهاء.</p>
+        </div>
+        <div class="fi" style="margin-top:14px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;font-weight:700;color:var(--navy)">
+            <input type="checkbox" style="width:16px;height:16px;cursor:pointer"> أوافق على جميع بنود العقد وأتعهد بالالتزام بها
+          </label>
+        </div>
+        <div class="fi">
+          <label class="fl">التوقيع الإلكتروني (اسمك كاملاً)</label>
+          <input type="text" placeholder="اكتب اسمك كما يظهر في الهوية الوطنية">
+        </div>
+      </div>
+    `;
+  } else {
+    c.innerHTML=`
+      <div class="success-wrap">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">تم تسجيلك بنجاح!</div>
+        <div class="success-sub">مرحباً بك في ميدفلو — سيتواصل معك فريقنا خلال 24 ساعة لتفعيل حسابك وبدء إيداع منتجاتك</div>
+        <div style="display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto">
+          <div style="display:flex;align-items:center;gap:10px;background:var(--greenl);border-radius:10px;padding:12px"><span style="font-size:20px">✅</span><div style="font-size:12px;color:var(--green);font-weight:700">البيانات الأساسية مكتملة</div></div>
+          <div style="display:flex;align-items:center;gap:10px;background:var(--greenl);border-radius:10px;padding:12px"><span style="font-size:20px">✅</span><div style="font-size:12px;color:var(--green);font-weight:700">المستندات مرفوعة</div></div>
+          <div style="display:flex;align-items:center;gap:10px;background:var(--greenl);border-radius:10px;padding:12px"><span style="font-size:20px">✅</span><div style="font-size:12px;color:var(--green);font-weight:700">العقد موقّع — ${selectedComm}% عمولة</div></div>
+          <div style="display:flex;align-items:center;gap:10px;background:var(--amberl);border-radius:10px;padding:12px"><span style="font-size:20px">⏳</span><div style="font-size:12px;color:var(--amber);font-weight:700">قيد المراجعة — 24 ساعة</div></div>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:10px;justify-content:center">
+          <a href="medflow-dashboard.html" class="btn btn-teal">→ الذهاب للوحة التحكم</a>
+          <a href="medflow-seller.html" class="btn btn-out">👤 ملف المسوّق</a>
+        </div>
+      </div>
+    `;
+  }
+  // footer
+  const footer=`
+    <div class="form-footer">
+      ${current>0&&current<3?`<button class="btn btn-out" onclick="prev()">← السابق</button>`:'<div></div>'}
+      ${current<3?`<button class="btn btn-teal" onclick="next()">${current===2?'✅ توقيع وإرسال':'التالي →'}</button>`:''}
+    </div>
+  `;
+  if(current<3) c.insertAdjacentHTML('beforeend',footer);
+}
+
+function selectComm(v,el){selectedComm=v;document.querySelectorAll('.comm-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');}
+function next(){if(current<3){current++;renderSteps();renderContent();window.scrollTo(0,0);}}
+function prev(){if(current>0){current--;renderSteps();renderContent();window.scrollTo(0,0);}}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+
+renderSteps();
+renderContent();
+</script>
+</body>
+</html>

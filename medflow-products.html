@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — عرض المنتجات</title>
+<style>
+:root{
+  --teal:#00B5A6;--teal2:#008F83;--teal3:#006B62;
+  --teall:#F0FAFA;--tealm:#C8EDEA;--tealtext:#007A70;
+  --navy:#1B2B4B;--navy2:#0F1E36;
+  --paper:#F5F7FA;--paper2:#ECEEF3;--paper3:#E2E6EE;
+  --white:#FFFFFF;--ink:#1B2B4B;--ink2:#3D536F;--ink3:#7A90A8;
+  --green:#059669;--greenl:#ECFDF5;--greenm:#6EE7B7;
+  --amber:#D97706;--amberl:#FFFBEB;--amberm:#FCD34D;
+  --red:#DC2626;--redl:#FEF2F2;--redm:#FCA5A5;
+  --blue:#2563EB;--bluel:#EFF6FF;
+  --purple:#7C3AED;--purplel:#F5F3FF;
+  --border:#DDE3EE;--shadow:0 1px 3px rgba(27,43,75,.08);--shadow2:0 6px 20px rgba(27,43,75,.11);
+  --sidebar:220px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--paper);color:var(--ink);direction:rtl;font-size:14px}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:4px}
+
+/* ══ LAYOUT ══ */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ══ SIDEBAR ══ */
+.sidebar{width:var(--sidebar);background:var(--navy2);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-icon svg{width:20px;height:20px}
+.logo-name{font-size:15px;font-weight:900;color:#fff;letter-spacing:-.5px}
+.logo-sub{font-size:9px;color:rgba(255,255,255,.35);margin-top:1px}
+.nav-section{padding:16px 10px 6px;font-size:9px;font-weight:800;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;margin:1px 6px;border-radius:8px;cursor:pointer;transition:all .15s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.06)}
+.nav-item.active{background:rgba(0,181,166,.18);border:1px solid rgba(0,181,166,.25)}
+.nav-icon{width:16px;height:16px;opacity:.5;flex-shrink:0}
+.nav-item.active .nav-icon{opacity:1}
+.nav-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.55)}
+.nav-item.active .nav-label{color:#fff;font-weight:700}
+.nav-badge{margin-right:auto;background:var(--teal);color:#fff;font-size:9px;font-weight:800;border-radius:10px;padding:1px 6px}
+.sidebar-user{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:9px}
+.user-avatar{width:32px;height:32px;background:var(--teal);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.user-name{font-size:11px;font-weight:700;color:#fff}
+.user-role{font-size:9px;color:rgba(255,255,255,.35)}
+
+/* ══ MAIN ══ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ══ TOPBAR ══ */
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.topbar-title{font-size:15px;font-weight:800;color:var(--navy)}
+.topbar-spacer{flex:1}
+.topbar-search{display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--border);border-radius:9px;padding:7px 12px;width:260px}
+.topbar-search input{border:none;background:transparent;font-size:12px;color:var(--ink);outline:none;width:100%;direction:rtl}
+.topbar-search input::placeholder{color:var(--ink3)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-teal:hover{background:var(--teal2)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--ink2)}
+.btn-outline:hover{background:var(--paper);color:var(--navy)}
+.btn-sm{padding:6px 12px;font-size:11px}
+
+/* ══ CONTENT ══ */
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+
+/* ══ STATS BAR ══ */
+.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
+.stat-card:hover{box-shadow:var(--shadow2);transform:translateY(-1px)}
+.stat-ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.stat-val{font-size:20px;font-weight:900;color:var(--navy);line-height:1}
+.stat-lbl{font-size:10px;color:var(--ink3);margin-top:2px;font-weight:600}
+
+/* ══ TOOLBAR ══ */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.cat-tabs{display:flex;gap:4px;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:4px}
+.ctab{padding:6px 14px;border-radius:7px;font-size:11px;font-weight:700;color:var(--ink3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.ctab.active{background:var(--teal);color:#fff;box-shadow:0 2px 6px rgba(0,181,166,.3)}
+.ctab:hover:not(.active){background:var(--paper);color:var(--navy)}
+.toolbar-spacer{flex:1}
+.sort-select{border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:11px;color:var(--ink2);background:var(--white);outline:none;cursor:pointer;direction:rtl}
+.view-toggle{display:flex;gap:2px;background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:3px}
+.vt-btn{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .15s}
+.vt-btn.active{background:var(--white);box-shadow:var(--shadow)}
+
+/* ══ PRODUCTS GRID ══ */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+
+/* ══ PRODUCT CARD ══ */
+.product-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;position:relative}
+.product-card:hover{box-shadow:var(--shadow2);transform:translateY(-2px);border-color:var(--tealm)}
+.product-card.selected{border:2px solid var(--teal);box-shadow:0 0 0 3px rgba(0,181,166,.12)}
+
+.pc-img{height:140px;display:flex;align-items:center;justify-content:center;font-size:52px;position:relative;overflow:hidden}
+.pc-badges{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:4px}
+.pc-badge{font-size:9px;font-weight:800;border-radius:5px;padding:2px 7px}
+.pc-badge-new{background:#FDE68A;color:#92400E}
+.pc-badge-low{background:var(--redl);color:var(--red)}
+.pc-badge-promo{background:var(--purplel);color:var(--purple)}
+.pc-check{position:absolute;top:10px;left:10px;width:22px;height:22px;border-radius:6px;background:var(--teal);color:#fff;display:none;align-items:center;justify-content:center;font-size:12px}
+.product-card.selected .pc-check{display:flex}
+
+.pc-body{padding:14px}
+.pc-cat{font-size:9px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.pc-name{font-size:13px;font-weight:800;color:var(--navy);line-height:1.35;margin-bottom:4px}
+.pc-seller{font-size:10px;color:var(--ink3);display:flex;align-items:center;gap:4px;margin-bottom:10px}
+.pc-seller-dot{width:14px;height:14px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;color:#fff;flex-shrink:0}
+.pc-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.pc-price{font-size:16px;font-weight:900;color:var(--navy)}
+.pc-price-unit{font-size:10px;color:var(--ink3);font-weight:600}
+.pc-stock{font-size:11px;font-weight:700}
+.pc-bar{height:4px;background:var(--paper3);border-radius:4px;overflow:hidden;margin-bottom:10px}
+.pc-barf{height:100%;border-radius:4px}
+.pc-footer{display:flex;gap:6px}
+.pc-btn{flex:1;padding:7px;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.pc-btn-main{background:var(--teal);color:#fff}
+.pc-btn-main:hover{background:var(--teal2)}
+.pc-btn-sec{background:var(--paper);border:1px solid var(--border);color:var(--ink2)}
+.pc-btn-sec:hover{background:var(--paper2)}
+
+/* ══ LIST VIEW ══ */
+.products-list{display:flex;flex-direction:column;gap:10px}
+.product-list-item{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);cursor:pointer;transition:all .15s}
+.product-list-item:hover{box-shadow:var(--shadow2);border-color:var(--tealm)}
+.product-list-item.selected{border:2px solid var(--teal)}
+.pli-img{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.pli-info{flex:1}
+.pli-name{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:2px}
+.pli-meta{font-size:10px;color:var(--ink3);display:flex;gap:12px}
+.pli-price{font-size:15px;font-weight:900;color:var(--navy);flex-shrink:0}
+.pli-stock{flex-shrink:0}
+.pli-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* ══ MODAL ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,30,54,.5);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:18px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-header{padding:20px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.modal-title{font-size:15px;font-weight:800;color:var(--navy);flex:1}
+.modal-close{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
+.modal-body{padding:20px 22px}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:11px;font-weight:800;color:var(--navy)}
+.form-input{border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:12px;color:var(--ink);outline:none;background:var(--paper);direction:rtl;transition:border-color .15s}
+.form-input:focus{border-color:var(--teal);background:var(--white)}
+.form-select{border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:12px;color:var(--ink);outline:none;background:var(--paper);direction:rtl;cursor:pointer}
+.form-select:focus{border-color:var(--teal)}
+.form-hint{font-size:10px;color:var(--ink3)}
+.cat-picker{display:flex;flex-wrap:wrap;gap:6px}
+.cp-opt{padding:5px 12px;border-radius:7px;border:1px solid var(--border);font-size:11px;font-weight:700;color:var(--ink3);cursor:pointer;transition:all .15s}
+.cp-opt.picked{background:var(--teall);border-color:var(--tealm);color:var(--teal2)}
+
+/* BULK BAR */
+.bulk-bar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);border-radius:14px;padding:12px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 8px 28px rgba(0,0,0,.25);z-index:200;transition:all .3s;opacity:0;pointer-events:none;white-space:nowrap}
+.bulk-bar.show{opacity:1;pointer-events:all}
+.bulk-count{font-size:12px;font-weight:800;color:#fff}
+.bulk-actions{display:flex;gap:6px}
+.bulk-btn{padding:6px 14px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;border:none;transition:all .15s}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;color:var(--ink3)}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:.4}
+.empty-title{font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+.empty-desc{font-size:12px;line-height:1.7}
+
+/* STATUS BADGES */
+.b{display:inline-flex;align-items:center;gap:3px;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800}
+.bg{background:var(--greenl);color:var(--green)}
+.ba{background:var(--amberl);color:var(--amber)}
+.br{background:var(--redl);color:var(--red)}
+.bt{background:var(--teall);color:var(--teal2)}
+.bp{background:var(--purplel);color:var(--purple)}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+
+@media(max-width:1100px){.stats-bar{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){.sidebar{display:none}.stats-bar{grid-template-columns:1fr 1fr}.products-grid{grid-template-columns:1fr 1fr}.cat-tabs{overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="medflow-nav.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+        <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-name">ميدفلو</div><div class="logo-sub">النظام المتكامل</div></div>
+      </a>
+    </div>
+    <div class="nav-section">الرئيسية</div>
+    <a href="medflow-dashboard.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">لوحة التحكم</span></a>
+    <div class="nav-section">الطلبيات</div>
+    <a href="medflow-orders-list.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">جميع الطلبات</span></a>
+    <a href="medflow-rfq.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 6h8M2 9h10M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">سوق الطلبيات</span></a>
+    <div class="nav-section">المستودع</div>
+    <a href="medflow-products.html" class="nav-item active"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M1 6l7-4 7 4v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المنتجات</span></a>
+    <a href="medflow-inventory.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">المخزون</span></a>
+    <a href="medflow-sfda.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1l6 3v4c0 3.5-2.5 6.5-6 7.5C2.5 14.5 0 11.5 0 8V4l8-3Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">امتثال SFDA</span></a>
+    <div class="nav-section">الأطراف</div>
+    <a href="medflow-clients.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="10" r="3" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العملاء</span></a>
+    <a href="medflow-seller.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المسوّقون</span></a>
+    <a href="medflow-contracts.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h6M5 12h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العقود</span></a>
+    <div class="nav-section">المالية</div>
+    <a href="medflow-finance.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#fff" stroke-width="1.2"/><path d="M1 7h14" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">التسوية المالية</span></a>
+    <a href="medflow-invoices.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">الفواتير</span></a>
+    <a href="medflow-reports.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 7l3 3 5-7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">التقارير</span></a>
+    <div class="nav-section">النظام</div>
+    <a href="medflow-onboarding.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M8 5v6M5 8h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">تسجيل مسوّق</span></a>
+    <a href="medflow-settings.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="#fff" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">الإعدادات</span></a>
+    <a href="medflow-nav.html" class="nav-item" style="margin-top:auto"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">خريطة النظام</span></a>
+
+    <div class="sidebar-user">
+      <div class="user-av">جه</div>
+      <div><div class="user-name">جهاد اللهيبي</div><div class="user-role">مستودع مرخص · مكة</div></div>
+    </div>
+</aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-title">عرض المنتجات</div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="#7A90A8" stroke-width="1.4"/><path d="M11 11l3 3" stroke="#7A90A8" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <input type="text" placeholder="ابحث عن منتج أو مسوّق..." oninput="searchProducts(this.value)">
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="openExport()">📤 تصدير</button>
+      <button class="btn btn-teal btn-sm" onclick="openAddProduct()">+ إضافة منتج</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- STATS BAR -->
+      <div class="stats-bar">
+        <div class="stat-card" onclick="filterCat('all')">
+          <div class="stat-ic" style="background:var(--teall)">📦</div>
+          <div><div class="stat-val" id="statTotal">142</div><div class="stat-lbl">إجمالي المنتجات</div></div>
+        </div>
+        <div class="stat-card" onclick="filterCat('أدوية')">
+          <div class="stat-ic" style="background:#EFF6FF">💊</div>
+          <div><div class="stat-val">58</div><div class="stat-lbl">أدوية</div></div>
+        </div>
+        <div class="stat-card" onclick="filterCat('مستلزمات')">
+          <div class="stat-ic" style="background:var(--greenl)">🩺</div>
+          <div><div class="stat-val">49</div><div class="stat-lbl">مستلزمات طبية</div></div>
+        </div>
+        <div class="stat-card" onclick="filterCat('تجميل')">
+          <div class="stat-ic" style="background:var(--purplel)">✨</div>
+          <div><div class="stat-val">35</div><div class="stat-lbl">تجميل طبي</div></div>
+        </div>
+        <div class="stat-card" onclick="filterCat('low')">
+          <div class="stat-ic" style="background:var(--redl)">⚠️</div>
+          <div><div class="stat-val">3</div><div class="stat-lbl">مخزون ينفد</div></div>
+        </div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="cat-tabs" id="catTabs">
+          <div class="ctab active" onclick="filterCat('all',this)">الكل (142)</div>
+          <div class="ctab" onclick="filterCat('أدوية',this)">💊 أدوية</div>
+          <div class="ctab" onclick="filterCat('مستلزمات',this)">🩺 مستلزمات</div>
+          <div class="ctab" onclick="filterCat('تجميل',this)">✨ تجميل طبي</div>
+        </div>
+        <div class="toolbar-spacer"></div>
+        <select class="sort-select" onchange="sortProducts(this.value)">
+          <option value="newest">الأحدث أولاً</option>
+          <option value="price_high">السعر: الأعلى</option>
+          <option value="price_low">السعر: الأقل</option>
+          <option value="stock_low">المخزون: الأقل</option>
+          <option value="sales">الأكثر مبيعاً</option>
+        </select>
+        <div class="view-toggle">
+          <div class="vt-btn active" id="gridBtn" onclick="setView('grid')">⊞</div>
+          <div class="vt-btn" id="listBtn" onclick="setView('list')">≡</div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div id="productsContainer"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ADD PRODUCT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span style="font-size:22px">📦</span>
+      <span class="modal-title">إضافة منتج جديد</span>
+      <div class="modal-close" onclick="closeModal('addModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group full">
+          <label class="form-label">اسم المنتج</label>
+          <input class="form-input" type="text" placeholder="مثال: باراسيتامول 500mg">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">الفئة</label>
+          <div class="cat-picker">
+            <div class="cp-opt picked" onclick="toggleCat(this)">💊 أدوية</div>
+            <div class="cp-opt" onclick="toggleCat(this)">🩺 مستلزمات</div>
+            <div class="cp-opt" onclick="toggleCat(this)">✨ تجميل طبي</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">المسوّق</label>
+          <select class="form-select">
+            <option>أحمد الغامدي</option>
+            <option>محمد العتيبي</option>
+            <option>سارة المالكي</option>
+            <option>نورة الزهراني</option>
+            <option>ريم القحطاني</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">سعر البيع (﷼)</label>
+          <input class="form-input" type="number" placeholder="0.00">
+          <span class="form-hint">السعر المعروض للعميل</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">سعر التكلفة (﷼)</label>
+          <input class="form-input" type="number" placeholder="0.00">
+          <span class="form-hint">يبقى سري — يحسب الهامش</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">الكمية المتاحة</label>
+          <input class="form-input" type="number" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">حد إعادة الطلب</label>
+          <input class="form-input" type="number" placeholder="0">
+          <span class="form-hint">تنبيه عند الوصول لهذا الرقم</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">الوحدة</label>
+          <select class="form-select">
+            <option>علبة</option><option>قطعة</option><option>حزمة</option><option>كرتون</option><option>زجاجة</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">تاريخ الانتهاء</label>
+          <input class="form-input" type="date">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label class="form-label">رقم ترخيص SFDA</label>
+          <input class="form-input" type="text" placeholder="SA-XXXX-XXXXXXX">
+          <span class="form-hint">إلزامي — لن يُعرض المنتج بدونه</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label class="form-label">وصف المنتج</label>
+          <textarea class="form-input" rows="3" placeholder="وصف مختصر للمنتج وفوائده..." style="resize:none"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('addModal')">إلغاء</button>
+      <button class="btn btn-teal" onclick="submitProduct()">✅ إضافة المنتج</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span id="dIcon" style="font-size:22px">💊</span>
+      <span class="modal-title" id="dName">اسم المنتج</span>
+      <div class="modal-close" onclick="closeModal('detailModal')">✕</div>
+    </div>
+    <div class="modal-body" id="dBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('detailModal')">إغلاق</button>
+      <button class="btn btn-outline" onclick="closeModal('detailModal')">✏️ تعديل</button>
+      <button class="btn btn-teal" onclick="closeModal('detailModal');showToast('تمت إضافة للطلب ✓')">+ أضف لطلب</button>
+    </div>
+  </div>
+</div>
+
+<!-- BULK BAR -->
+<div class="bulk-bar" id="bulkBar">
+  <div class="bulk-count" id="bulkCount">0 منتج محدد</div>
+  <div class="bulk-actions">
+    <button class="bulk-btn" style="background:var(--teal);color:#fff" onclick="bulkAction('طلب')">📦 إنشاء طلب</button>
+    <button class="bulk-btn" style="background:rgba(255,255,255,.1);color:#fff" onclick="bulkAction('تصدير')">📤 تصدير</button>
+    <button class="bulk-btn" style="background:rgba(239,68,68,.2);color:#FCA5A5" onclick="clearSelection()">✕ إلغاء</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const products = [
+  {id:1,name:'باراسيتامول 500mg',cat:'أدوية',icon:'💊',seller:'سارة المالكي',sellerColor:'#059669',price:41,cost:28,stock:48,maxStock:500,unit:'علبة',sfda:'SA-2024-0123456',expiry:'2026-09',badge:'low',sales:892},
+  {id:2,name:'قفازات طبية لاتكس M',cat:'مستلزمات',icon:'🧤',seller:'أحمد الغامدي',sellerColor:'#0EA5E9',price:250,cost:160,stock:187,maxStock:500,unit:'علبة',sfda:'SA-2024-0234567',expiry:'2027-03',badge:'',sales:654},
+  {id:3,name:'كريم فيتامين C طبي 30ml',cat:'تجميل',icon:'✨',seller:'محمد العتيبي',sellerColor:'#8B5CF6',price:300,cost:195,stock:210,maxStock:300,unit:'قطعة',sfda:'SA-2023-0345678',expiry:'2026-11',badge:'new',sales:421},
+  {id:4,name:'ضمادات معقمة 10×15',cat:'مستلزمات',icon:'🩹',seller:'نورة الزهراني',sellerColor:'#D97706',price:75,cost:48,stock:1200,maxStock:2000,unit:'حزمة',sfda:'SA-2024-0456789',expiry:'2028-06',badge:'',sales:1203},
+  {id:5,name:'أوميغا 3 — 60 كبسولة',cat:'أدوية',icon:'🐟',seller:'خالد الشمري',sellerColor:'#DC2626',price:130,cost:82,stock:320,maxStock:500,unit:'علبة',sfda:'SA-2024-0567890',expiry:'2027-01',badge:'',sales:538},
+  {id:6,name:'واقي شمس SPF50 طبي 100ml',cat:'تجميل',icon:'🌞',seller:'ريم القحطاني',sellerColor:'#DC2626',price:250,cost:155,stock:145,maxStock:200,unit:'قطعة',sfda:'SA-2023-0678901',expiry:'2026-08',badge:'promo',sales:287},
+  {id:7,name:'محقنة 5ml معقمة',cat:'مستلزمات',icon:'💉',seller:'أحمد الغامدي',sellerColor:'#0EA5E9',price:15,cost:8,stock:5000,maxStock:10000,unit:'قطعة',sfda:'SA-2024-0789012',expiry:'2028-12',badge:'',sales:3201},
+  {id:8,name:'فيتامين D3 — 1000 IU',cat:'أدوية',icon:'☀️',seller:'سارة المالكي',sellerColor:'#059669',price:85,cost:54,stock:440,maxStock:600,unit:'علبة',sfda:'SA-2024-0890123',expiry:'2027-04',badge:'new',sales:712},
+  {id:9,name:'مرطب شفاه طبي SPF20',cat:'تجميل',icon:'💋',seller:'ريم القحطاني',sellerColor:'#DC2626',price:45,cost:28,stock:380,maxStock:500,unit:'قطعة',sfda:'SA-2023-0901234',expiry:'2026-12',badge:'',sales:198},
+  {id:10,name:'مقياس ضغط رقمي',cat:'مستلزمات',icon:'🩺',seller:'نورة الزهراني',sellerColor:'#D97706',price:185,cost:110,stock:67,maxStock:100,unit:'قطعة',sfda:'SA-2022-1012345',expiry:'2030-01',badge:'',sales:145},
+  {id:11,name:'زنك + فيتامين C',cat:'أدوية',icon:'💊',seller:'خالد الشمري',sellerColor:'#DC2626',price:65,cost:40,stock:290,maxStock:400,unit:'علبة',sfda:'SA-2024-1123456',expiry:'2027-06',badge:'',sales:334},
+  {id:12,name:'سيروم هيالورونيك أسيد',cat:'تجميل',icon:'🌿',seller:'محمد العتيبي',sellerColor:'#8B5CF6',price:420,cost:260,stock:88,maxStock:150,unit:'قطعة',sfda:'SA-2023-1234567',expiry:'2026-10',badge:'new',sales:176},
+];
+
+let currentView = 'grid';
+let currentCat = 'all';
+let selectedIds = new Set();
+let searchQuery = '';
+
+// ── RENDER ──
+function render() {
+  let filtered = products.filter(p => {
+    const matchCat = currentCat === 'all' || (currentCat === 'low' ? p.stock < 200 : p.cat.includes(currentCat.slice(0,3)));
+    const matchSearch = !searchQuery || p.name.includes(searchQuery) || p.seller.includes(searchQuery);
+    return matchCat && matchSearch;
+  });
+
+  const container = document.getElementById('productsContainer');
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">لا توجد منتجات</div><div class="empty-desc">جرب تغيير الفلتر أو كلمة البحث</div></div>`;
+    return;
+  }
+
+  if (currentView === 'grid') {
+    container.innerHTML = `<div class="products-grid">${filtered.map(p => cardHTML(p)).join('')}</div>`;
+  } else {
+    container.innerHTML = `<div class="products-list">${filtered.map(p => listItemHTML(p)).join('')}</div>`;
+  }
+}
+
+function stockPct(p) { return Math.min(100, Math.round(p.stock / p.maxStock * 100)); }
+function stockColor(p) {
+  const pct = stockPct(p);
+  return pct < 20 ? 'var(--red)' : pct < 50 ? 'var(--amber)' : 'var(--teal)';
+}
+function margin(p) { return Math.round((p.price - p.cost) / p.price * 100); }
+
+function badgeHTML(b) {
+  if (!b) return '';
+  const map = {new:'pc-badge-new', low:'pc-badge-low', promo:'pc-badge-promo'};
+  const lbl = {new:'جديد', low:'ينفد', promo:'عرض'};
+  return `<div class="pc-badge ${map[b]}">${lbl[b]}</div>`;
+}
+
+function bgForCat(cat) {
+  if (cat === 'أدوية') return 'background:#EFF6FF';
+  if (cat === 'تجميل') return 'background:var(--purplel)';
+  return 'background:var(--greenl)';
+}
+
+function cardHTML(p) {
+  const sel = selectedIds.has(p.id);
+  return `
+  <div class="product-card ${sel?'selected':''}" onclick="toggleSelect(event,${p.id})">
+    <div class="pc-img" style="${bgForCat(p.cat)}">
+      ${p.icon}
+      <div class="pc-badges">${badgeHTML(p.badge)}</div>
+      <div class="pc-check">✓</div>
+    </div>
+    <div class="pc-body">
+      <div class="pc-cat">${p.cat}</div>
+      <div class="pc-name">${p.name}</div>
+      <div class="pc-seller"><div class="pc-seller-dot" style="background:${p.sellerColor}">${p.seller[0]}</div>${p.seller}</div>
+      <div class="pc-meta">
+        <div><div class="pc-price">${p.price} ﷼ <span class="pc-price-unit">/ ${p.unit}</span></div></div>
+        <div class="pc-stock" style="color:${stockColor(p)}">${p.stock} ${p.unit}</div>
+      </div>
+      <div class="pc-bar"><div class="pc-barf" style="width:${stockPct(p)}%;background:${stockColor(p)}"></div></div>
+      <div class="pc-footer">
+        <button class="pc-btn pc-btn-main" onclick="openDetail(event,${p.id})">تفاصيل</button>
+        <button class="pc-btn pc-btn-sec" onclick="event.stopPropagation();showToast('تمت الإضافة للطلب ✓')">+ طلب</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function listItemHTML(p) {
+  const sel = selectedIds.has(p.id);
+  return `
+  <div class="product-list-item ${sel?'selected':''}" onclick="toggleSelect(event,${p.id})">
+    <div class="pli-img" style="${bgForCat(p.cat)}">${p.icon}</div>
+    <div class="pli-info">
+      <div class="pli-name">${p.name}</div>
+      <div class="pli-meta">
+        <span>${p.cat}</span>
+        <span>المسوّق: ${p.seller}</span>
+        <span>هامش: ${margin(p)}%</span>
+        <span>SFDA: ${p.sfda}</span>
+        <span>مبيعات: ${p.sales}</span>
+      </div>
+    </div>
+    <div class="pli-price">${p.price} ﷼</div>
+    <div class="pli-stock">
+      <div class="pc-stock" style="color:${stockColor(p)};font-size:12px;font-weight:800">${p.stock} ${p.unit}</div>
+    </div>
+    <div class="pli-actions">
+      <button class="btn btn-outline btn-sm" onclick="openDetail(event,${p.id})">تفاصيل</button>
+      <button class="btn btn-teal btn-sm" onclick="event.stopPropagation();showToast('تمت الإضافة للطلب ✓')">+ طلب</button>
+    </div>
+  </div>`;
+}
+
+// ── SELECTION ──
+function toggleSelect(e, id) {
+  if (e.target.tagName === 'BUTTON') return;
+  if (selectedIds.has(id)) selectedIds.delete(id);
+  else selectedIds.add(id);
+  updateBulkBar();
+  render();
+}
+
+function updateBulkBar() {
+  const bar = document.getElementById('bulkBar');
+  const count = document.getElementById('bulkCount');
+  count.textContent = selectedIds.size + ' منتج محدد';
+  bar.classList.toggle('show', selectedIds.size > 0);
+}
+
+function clearSelection() {
+  selectedIds.clear();
+  updateBulkBar();
+  render();
+}
+
+function bulkAction(action) {
+  showToast(`${action} لـ ${selectedIds.size} منتج ✓`);
+  clearSelection();
+}
+
+// ── FILTER & SORT ──
+function filterCat(cat, el) {
+  currentCat = cat;
+  document.querySelectorAll('.ctab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  render();
+}
+
+function searchProducts(q) {
+  searchQuery = q;
+  render();
+}
+
+function sortProducts(val) {
+  if (val === 'price_high') products.sort((a,b) => b.price - a.price);
+  else if (val === 'price_low') products.sort((a,b) => a.price - b.price);
+  else if (val === 'stock_low') products.sort((a,b) => a.stock - b.stock);
+  else if (val === 'sales') products.sort((a,b) => b.sales - a.sales);
+  else products.sort((a,b) => b.id - a.id);
+  render();
+}
+
+// ── VIEW ──
+function setView(v) {
+  currentView = v;
+  document.getElementById('gridBtn').classList.toggle('active', v === 'grid');
+  document.getElementById('listBtn').classList.toggle('active', v === 'list');
+  render();
+}
+
+// ── MODAL ──
+function openAddProduct() { document.getElementById('addModal').classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function openDetail(e, id) {
+  e.stopPropagation();
+  const p = products.find(x => x.id === id);
+  document.getElementById('dName').textContent = p.name;
+  document.getElementById('dIcon').textContent = p.icon;
+  document.getElementById('dBody').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+      <div style="background:var(--paper);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--ink3);font-weight:700;margin-bottom:4px">سعر البيع</div>
+        <div style="font-size:20px;font-weight:900;color:var(--navy)">${p.price} ﷼ / ${p.unit}</div>
+      </div>
+      <div style="background:var(--greenl);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--green);font-weight:700;margin-bottom:4px">هامش الربح</div>
+        <div style="font-size:20px;font-weight:900;color:var(--green)">${margin(p)}%</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:9px;font-size:12px">
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)"><span style="color:var(--ink3)">الفئة</span><span style="font-weight:700;color:var(--navy)">${p.cat}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)"><span style="color:var(--ink3)">المسوّق</span><span style="font-weight:700;color:var(--navy)">${p.seller}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)"><span style="color:var(--ink3)">المخزون الحالي</span><span style="font-weight:700;color:${stockColor(p)}">${p.stock} ${p.unit} (${stockPct(p)}%)</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)"><span style="color:var(--ink3)">حد إعادة الطلب</span><span style="font-weight:700;color:var(--navy)">${p.maxStock/10} ${p.unit}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)"><span style="color:var(--ink3)">رقم SFDA</span><span style="font-weight:700;color:var(--navy)">${p.sfda}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)"><span style="color:var(--ink3)">تاريخ الانتهاء</span><span style="font-weight:700;color:var(--navy)">${p.expiry}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0"><span style="color:var(--ink3)">إجمالي المبيعات</span><span style="font-weight:700;color:var(--teal2)">${p.sales} ${p.unit}</span></div>
+    </div>`;
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function toggleCat(el) { el.classList.toggle('picked'); }
+
+function submitProduct() {
+  closeModal('addModal');
+  showToast('تمت إضافة المنتج بنجاح ✓');
+}
+
+function openExport() { showToast('جارٍ تصدير القائمة... 📤'); }
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── INIT ──
+render();
+</script>
+</body>
+</html>

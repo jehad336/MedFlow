@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — إدارة العقود</title>
+<style>
+:root{--teal:#00B5A6;--teal2:#008F83;--teall:#F0FAFA;--tealm:#C8EDEA;--navy:#1B2B4B;--navy2:#0F1E36;--paper:#F5F7FA;--paper2:#ECEEF3;--paper3:#E2E6EE;--white:#fff;--ink:#1B2B4B;--ink2:#3D536F;--ink3:#7A90A8;--green:#059669;--greenl:#ECFDF5;--amber:#D97706;--amberl:#FFFBEB;--red:#DC2626;--redl:#FEF2F2;--border:#DDE3EE;--shadow:0 1px 3px rgba(27,43,75,.08);--shadow2:0 6px 20px rgba(27,43,75,.11);--sidebar:220px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--paper);color:var(--ink);direction:rtl;font-size:14px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:4px}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:var(--sidebar);background:var(--navy2);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-name{font-size:15px;font-weight:900;color:#fff}.logo-sub{font-size:9px;color:rgba(255,255,255,.35);margin-top:1px}
+.nav-section{padding:16px 10px 6px;font-size:9px;font-weight:800;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;margin:1px 6px;border-radius:8px;cursor:pointer;transition:all .15s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.06)}.nav-item.active{background:rgba(0,181,166,.18);border:1px solid rgba(0,181,166,.25)}
+.nav-icon{width:16px;height:16px;opacity:.5;flex-shrink:0}.nav-item.active .nav-icon{opacity:1}
+.nav-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.55)}.nav-item.active .nav-label{color:#fff;font-weight:700}
+.nav-badge{margin-right:auto;background:var(--amber);color:#fff;font-size:9px;font-weight:800;border-radius:10px;padding:1px 6px}
+.sidebar-user{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:9px}
+.user-av{width:34px;height:34px;border-radius:10px;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.user-name{font-size:11px;font-weight:700;color:#fff}.user-role{font-size:9px;color:rgba(255,255,255,.35)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.tb-title{font-size:15px;font-weight:800;color:var(--navy)}.tb-spacer{flex:1}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+.btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:var(--teal2)}
+.btn-out{background:transparent;border:1px solid var(--border);color:var(--ink2)}.btn-out:hover{background:var(--paper)}
+.btn-sm{padding:6px 12px;font-size:11px}
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px}
+.stat-ic{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.stat-v{font-size:18px;font-weight:900;color:var(--navy);line-height:1}.stat-l{font-size:10px;color:var(--ink3);font-weight:600;margin-top:2px}
+.cols{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
+.contract-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.contract-card:hover{box-shadow:var(--shadow2);border-color:var(--tealm)}
+.contract-card.urgent::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:var(--amber)}
+.contract-card.expiring::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:var(--red)}
+.cc-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.cc-av{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;flex-shrink:0}
+.cc-name{font-size:13px;font-weight:800;color:var(--navy)}
+.cc-meta{font-size:10px;color:var(--ink3);margin-top:2px}
+.cc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.cc-stat{background:var(--paper);border-radius:8px;padding:8px;text-align:center}
+.cc-stat-v{font-size:13px;font-weight:900;color:var(--navy);line-height:1}
+.cc-stat-l{font-size:9px;color:var(--ink3);margin-top:2px;font-weight:600}
+.cc-footer{display:flex;align-items:center;justify-content:space-between}
+.b{display:inline-flex;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800}
+.bg{background:var(--greenl);color:var(--green)}.ba{background:var(--amberl);color:var(--amber)}.br{background:var(--redl);color:var(--red)}.bt{background:var(--teall);color:var(--teal2)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.card-title{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:14px}
+.ir{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--paper2);font-size:12px}
+.ir:last-child{border-bottom:none}
+.il{color:var(--ink3)}.iv{font-weight:700;color:var(--navy)}
+.modal-ov{position:fixed;inset:0;background:rgba(15,30,54,.55);backdrop-filter:blur(5px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.modal{background:var(--white);border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.22)}
+.modal-hd{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.modal-ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.modal-title{font-size:14px;font-weight:800;color:var(--navy);flex:1}
+.modal-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+.modal-body{padding:18px 20px}.modal-ft{padding:13px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.fi{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fl{font-size:11px;font-weight:800;color:var(--navy)}.fh{font-size:10px;color:var(--ink3)}
+.fi input,.fi select,.fi textarea{border:1px solid var(--border);border-radius:9px;padding:8px 11px;font-size:12px;color:var(--ink);background:var(--paper);outline:none;direction:rtl;font-family:inherit;transition:border-color .15s;width:100%}
+.fi input:focus,.fi select:focus{border-color:var(--teal);background:var(--white)}
+.comm-opts{display:flex;gap:8px}
+.comm-opt{flex:1;border:2px solid var(--border);border-radius:9px;padding:10px;text-align:center;cursor:pointer;transition:all .15s}
+.comm-opt.sel{border-color:var(--teal);background:var(--teall)}
+.comm-opt-v{font-size:18px;font-weight:900;color:var(--navy)}
+.comm-opt-l{font-size:10px;color:var(--ink3)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+@media(max-width:1000px){.cols{grid-template-columns:1fr}.stats-row{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.sidebar{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="medflow-nav.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+        <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-name">ميدفلو</div><div class="logo-sub">النظام المتكامل</div></div>
+      </a>
+    </div>
+    <div class="nav-section">الرئيسية</div>
+    <a href="medflow-dashboard.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">لوحة التحكم</span></a>
+    <div class="nav-section">الطلبيات</div>
+    <a href="medflow-orders-list.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">جميع الطلبات</span></a>
+    <a href="medflow-rfq.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 6h8M2 9h10M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">سوق الطلبيات</span></a>
+    <div class="nav-section">المستودع</div>
+    <a href="medflow-products.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M1 6l7-4 7 4v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المنتجات</span></a>
+    <a href="medflow-inventory.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">المخزون</span></a>
+    <a href="medflow-sfda.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1l6 3v4c0 3.5-2.5 6.5-6 7.5C2.5 14.5 0 11.5 0 8V4l8-3Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">امتثال SFDA</span></a>
+    <div class="nav-section">الأطراف</div>
+    <a href="medflow-clients.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="10" r="3" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العملاء</span></a>
+    <a href="medflow-seller.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المسوّقون</span></a>
+    <a href="medflow-contracts.html" class="nav-item active"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h6M5 12h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العقود</span></a>
+    <div class="nav-section">المالية</div>
+    <a href="medflow-finance.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#fff" stroke-width="1.2"/><path d="M1 7h14" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">التسوية المالية</span></a>
+    <a href="medflow-invoices.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">الفواتير</span></a>
+    <a href="medflow-reports.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 7l3 3 5-7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">التقارير</span></a>
+    <div class="nav-section">النظام</div>
+    <a href="medflow-onboarding.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M8 5v6M5 8h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">تسجيل مسوّق</span></a>
+    <a href="medflow-settings.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="#fff" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">الإعدادات</span></a>
+    <a href="medflow-nav.html" class="nav-item" style="margin-top:auto"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">خريطة النظام</span></a>
+
+    <div class="sidebar-user">
+      <div class="user-av">جه</div>
+      <div><div class="user-name">جهاد اللهيبي</div><div class="user-role">مستودع مرخص · مكة</div></div>
+    </div>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title">إدارة العقود</div>
+    <div class="tb-spacer"></div>
+    <button class="btn btn-out btn-sm" onclick="showToast('جارٍ تصدير العقود...')">📤 تصدير</button>
+    <button class="btn btn-teal btn-sm" onclick="document.getElementById('newModal').classList.add('open')">+ عقد جديد</button>
+  </div>
+  <div class="content">
+    <div class="stats-row">
+      <div class="stat"><div class="stat-ic" style="background:var(--greenl)">✅</div><div><div class="stat-v">18</div><div class="stat-l">عقود نشطة</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--amberl)">⏰</div><div><div class="stat-v">3</div><div class="stat-l">تنتهي خلال 30 يوم</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--redl)">⚠️</div><div><div class="stat-v">1</div><div class="stat-l">منتهية</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--teall)">💰</div><div><div class="stat-v">10%</div><div class="stat-l">متوسط العمولة</div></div></div>
+    </div>
+    <div class="cols">
+      <div>
+        <!-- EXPIRING ALERT -->
+        <div style="background:var(--amberl);border:1px solid var(--amberm,#FCD34D);border-radius:12px;padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+          <span style="font-size:22px">⏰</span>
+          <div style="flex:1"><div style="font-size:12px;font-weight:800;color:var(--amber)">3 عقود تنتهي خلال 30 يوماً</div><div style="font-size:10px;color:var(--amber);margin-top:2px">جهاد اللهيبي، سارة المالكي، خالد الشمري — يرجى التجديد قبل الانتهاء</div></div>
+          <button class="btn btn-sm" style="background:var(--amber);color:#fff" onclick="showToast('إرسال تذكيرات التجديد...')">تجديد الكل</button>
+        </div>
+        <div id="contractsList"></div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">📊 إحصاءات العقود</div>
+          <div class="ir"><span class="il">متوسط مدة العقد</span><span class="iv">12 شهر</span></div>
+          <div class="ir"><span class="il">أعلى عمولة</span><span class="iv" style="color:var(--teal2)">15%</span></div>
+          <div class="ir"><span class="il">أدنى عمولة</span><span class="iv">8%</span></div>
+          <div class="ir"><span class="il">إجمالي المسوّقين</span><span class="iv">18</span></div>
+          <div class="ir"><span class="il">تجديدات هذا العام</span><span class="iv" style="color:var(--green)">7</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📅 جدول التجديدات</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--redl);border-radius:8px"><span style="font-size:11px;font-weight:700;color:var(--red)">خالد الشمري</span><span style="font-size:10px;color:var(--red)">بعد 8 أيام</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--amberl);border-radius:8px"><span style="font-size:11px;font-weight:700;color:var(--amber)">جهاد اللهيبي</span><span style="font-size:10px;color:var(--amber)">بعد 15 يوم</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--amberl);border-radius:8px"><span style="font-size:11px;font-weight:700;color:var(--amber)">سارة المالكي</span><span style="font-size:10px;color:var(--amber)">بعد 28 يوم</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--greenl);border-radius:8px"><span style="font-size:11px;font-weight:700;color:var(--green)">أحمد الغامدي</span><span style="font-size:10px;color:var(--green)">بعد 3 أشهر</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- NEW CONTRACT MODAL -->
+<div class="modal-ov" id="newModal">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-ic" style="background:var(--teall)">📄</div><span class="modal-title">عقد جديد</span><div class="modal-close" onclick="this.closest('.modal-ov').classList.remove('open')">✕</div></div>
+    <div class="modal-body">
+      <div class="fi"><label class="fl">المسوّق</label><select><option>جهاد اللهيبي</option><option>أحمد الغامدي</option><option>سارة المالكي</option></select></div>
+      <div class="fi-row">
+        <div class="fi"><label class="fl">تاريخ البداية</label><input type="date"></div>
+        <div class="fi"><label class="fl">تاريخ الانتهاء</label><input type="date"></div>
+      </div>
+      <div class="fi"><label class="fl">نسبة العمولة</label>
+        <div class="comm-opts">
+          <div class="comm-opt" onclick="selComm(this)"><div class="comm-opt-v">8%</div><div class="comm-opt-l">أساسي</div></div>
+          <div class="comm-opt sel" onclick="selComm(this)"><div class="comm-opt-v">10%</div><div class="comm-opt-l">قياسي</div></div>
+          <div class="comm-opt" onclick="selComm(this)"><div class="comm-opt-v">12%</div><div class="comm-opt-l">مميز</div></div>
+          <div class="comm-opt" onclick="selComm(this)"><div class="comm-opt-v">15%</div><div class="comm-opt-l">بريميوم</div></div>
+        </div>
+      </div>
+      <div class="fi"><label class="fl">رسوم التخزين (﷼/وحدة/شهر)</label><input type="number" value="2"></div>
+      <div class="fi"><label class="fl">ملاحظات خاصة</label><textarea rows="2" placeholder="شروط إضافية..."></textarea></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-out" onclick="this.closest('.modal-ov').classList.remove('open')">إلغاء</button>
+      <button class="btn btn-teal" onclick="this.closest('.modal-ov').classList.remove('open');showToast('✅ تم إنشاء العقد وإرساله للمسوّق')">إنشاء وإرسال</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const contracts=[
+  {name:'جهاد اللهيبي',av:'جه',color:'#00B5A6',city:'مكة',comm:10,storage:2,start:'2026/01/15',end:'2027/01/15',sales:'142K',orders:14,status:'expiring',daysLeft:15},
+  {name:'أحمد الغامدي',av:'أح',color:'#2563EB',city:'الرياض',comm:10,storage:2,start:'2026/02/01',end:'2027/02/01',sales:'218K',orders:22,status:'active',daysLeft:211},
+  {name:'سارة المالكي',av:'سر',color:'#059669',city:'جدة',comm:12,storage:2,start:'2026/01/20',end:'2027/01/20',sales:'98K',orders:9,status:'expiring',daysLeft:28},
+  {name:'محمد العتيبي',av:'مح',color:'#7C3AED',city:'الدمام',comm:8,storage:1.5,start:'2026/03/10',end:'2027/03/10',sales:'187K',orders:17,status:'active',daysLeft:248},
+  {name:'نورة الزهراني',av:'نر',color:'#D97706',city:'المدينة',comm:10,storage:2,start:'2026/02/15',end:'2027/02/15',sales:'312K',orders:31,status:'active',daysLeft:225},
+  {name:'خالد الشمري',av:'خل',color:'#DC2626',city:'الطائف',comm:15,storage:3,start:'2025/07/13',end:'2026/07/13',sales:'76K',orders:8,status:'expiring',daysLeft:8},
+];
+const stMap={active:'نشط',expiring:'ينتهي قريباً',expired:'منتهي'};
+const stClass={active:'bg',expiring:'ba',expired:'br'};
+document.getElementById('contractsList').innerHTML=contracts.map(c=>`
+  <div class="contract-card ${c.status==='expiring'?(c.daysLeft<14?'expiring':'urgent'):''}">
+    <div class="cc-top">
+      <div class="cc-av" style="background:${c.color}">${c.av}</div>
+      <div style="flex:1">
+        <div class="cc-name">${c.name}</div>
+        <div class="cc-meta">📍 ${c.city} · عمولة ${c.comm}% · تخزين ${c.storage} ﷼/وحدة</div>
+        <div class="cc-meta">📅 ${c.start} — ${c.end}</div>
+      </div>
+      <span class="b ${stClass[c.status]}">${stMap[c.status]}</span>
+    </div>
+    <div class="cc-stats">
+      <div class="cc-stat"><div class="cc-stat-v">${c.orders}</div><div class="cc-stat-l">طلب</div></div>
+      <div class="cc-stat"><div class="cc-stat-v" style="color:var(--teal2)">${c.sales} ﷼</div><div class="cc-stat-l">مبيعات</div></div>
+      <div class="cc-stat"><div class="cc-stat-v" style="color:${c.daysLeft<30?'var(--red)':'var(--green)'}">${c.daysLeft}</div><div class="cc-stat-l">يوم متبقي</div></div>
+      <div class="cc-stat"><div class="cc-stat-v">${c.comm}%</div><div class="cc-stat-l">عمولة</div></div>
+    </div>
+    <div class="cc-footer">
+      <button class="btn btn-out btn-sm" onclick="showToast('تنزيل عقد ${c.name}')">📄 تنزيل</button>
+      <div style="display:flex;gap:6px">
+        ${c.status==='expiring'?`<button class="btn btn-sm" style="background:var(--amber);color:#fff" onclick="showToast('تجديد عقد ${c.name}')">🔄 تجديد</button>`:''}
+        <button class="btn btn-out btn-sm" onclick="showToast('تعديل عقد ${c.name}')">✏️ تعديل</button>
+      </div>
+    </div>
+  </div>
+`).join('');
+function selComm(el){document.querySelectorAll('.comm-opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+</script>
+</body>
+</html>

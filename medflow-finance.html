@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — التسوية المالية</title>
+<style>
+:root{--teal:#00B5A6;--teal2:#008F83;--teall:#F0FAFA;--tealm:#C8EDEA;--navy:#1B2B4B;--navy2:#0F1E36;--paper:#F5F7FA;--paper2:#ECEEF3;--paper3:#E2E6EE;--white:#fff;--ink:#1B2B4B;--ink2:#3D536F;--ink3:#7A90A8;--green:#059669;--greenl:#ECFDF5;--amber:#D97706;--amberl:#FFFBEB;--red:#DC2626;--redl:#FEF2F2;--border:#DDE3EE;--shadow:0 1px 3px rgba(27,43,75,.08);--shadow2:0 6px 20px rgba(27,43,75,.11);--sidebar:220px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--paper);color:var(--ink);direction:rtl;font-size:14px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:4px}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:var(--sidebar);background:var(--navy2);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-name{font-size:15px;font-weight:900;color:#fff}.logo-sub{font-size:9px;color:rgba(255,255,255,.35);margin-top:1px}
+.nav-section{padding:16px 10px 6px;font-size:9px;font-weight:800;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;margin:1px 6px;border-radius:8px;cursor:pointer;transition:all .15s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.06)}.nav-item.active{background:rgba(0,181,166,.18);border:1px solid rgba(0,181,166,.25)}
+.nav-icon{width:16px;height:16px;opacity:.5;flex-shrink:0}.nav-item.active .nav-icon{opacity:1}
+.nav-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.55)}.nav-item.active .nav-label{color:#fff;font-weight:700}
+.sidebar-user{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:9px}
+.user-av{width:34px;height:34px;border-radius:10px;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.user-name{font-size:11px;font-weight:700;color:#fff}.user-role{font-size:9px;color:rgba(255,255,255,.35)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.tb-title{font-size:15px;font-weight:800;color:var(--navy)}.tb-spacer{flex:1}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+.btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:var(--teal2)}
+.btn-out{background:transparent;border:1px solid var(--border);color:var(--ink2)}.btn-out:hover{background:var(--paper)}
+.btn-sm{padding:6px 12px;font-size:11px}
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+
+/* MONTH TABS */
+.month-tabs{display:flex;gap:6px;margin-bottom:18px;overflow-x:auto;padding-bottom:4px}
+.mtab{padding:7px 16px;border-radius:9px;font-size:12px;font-weight:700;border:1px solid var(--border);background:var(--white);color:var(--ink3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.mtab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:var(--ka,var(--teal))}
+.kpi-v{font-size:22px;font-weight:900;color:var(--navy);line-height:1;margin-bottom:4px}
+.kpi-l{font-size:11px;color:var(--ink3);font-weight:600}
+.kpi-s{font-size:10px;margin-top:4px;font-weight:700}
+
+/* MAIN COLS */
+.cols{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
+.card{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.card-title{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+
+/* TABLE */
+.tw{overflow-x:auto;border-radius:11px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--paper2);color:var(--navy);font-weight:800;font-size:10px;padding:9px 12px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--paper2);color:var(--ink2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--paper)}
+.tb{font-weight:700;color:var(--navy)}.tg{font-weight:700;color:var(--green)}.tt{font-weight:700;color:var(--teal2)}.ta{font-weight:700;color:var(--amber)}
+.b{display:inline-flex;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800}
+.bg{background:var(--greenl);color:var(--green)}.ba{background:var(--amberl);color:var(--amber)}.br{background:var(--redl);color:var(--red)}.bt{background:var(--teall);color:var(--teal2)}
+
+/* CHART */
+.chart-wrap{display:flex;align-items:flex-end;gap:5px;height:100px;margin:10px 0}
+.ch-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.ch-bar{width:100%;border-radius:4px 4px 0 0;min-height:4px}
+.ch-lbl{font-size:9px;color:var(--ink3);font-weight:600}
+.ch-val{font-size:9px;color:var(--ink2);font-weight:700}
+
+/* SUMMARY BOX */
+.sum-box{background:var(--navy);border-radius:13px;padding:18px;margin-bottom:14px}
+.sum-title{font-size:12px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.sum-row{display:flex;justify-content:space-between;font-size:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.sum-row:last-child{border-bottom:none;font-size:15px;font-weight:900;padding-top:12px}
+.sum-lbl{color:rgba(255,255,255,.5)}.sum-val{color:#fff;font-weight:700}
+
+/* INFO ROWS */
+.ir{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--paper2);font-size:12px}
+.ir:last-child{border-bottom:none}
+.il{color:var(--ink3)}.iv{font-weight:700;color:var(--navy)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+@media(max-width:1000px){.kpi-grid{grid-template-columns:1fr 1fr}.cols{grid-template-columns:1fr}}
+@media(max-width:720px){.sidebar{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="medflow-nav.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+        <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-name">ميدفلو</div><div class="logo-sub">النظام المتكامل</div></div>
+      </a>
+    </div>
+    <div class="nav-section">الرئيسية</div>
+    <a href="medflow-dashboard.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">لوحة التحكم</span></a>
+    <div class="nav-section">الطلبيات</div>
+    <a href="medflow-orders-list.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">جميع الطلبات</span></a>
+    <a href="medflow-rfq.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 6h8M2 9h10M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">سوق الطلبيات</span></a>
+    <div class="nav-section">المستودع</div>
+    <a href="medflow-products.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M1 6l7-4 7 4v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المنتجات</span></a>
+    <a href="medflow-inventory.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">المخزون</span></a>
+    <a href="medflow-sfda.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1l6 3v4c0 3.5-2.5 6.5-6 7.5C2.5 14.5 0 11.5 0 8V4l8-3Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">امتثال SFDA</span></a>
+    <div class="nav-section">الأطراف</div>
+    <a href="medflow-clients.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="10" r="3" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العملاء</span></a>
+    <a href="medflow-seller.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المسوّقون</span></a>
+    <a href="medflow-contracts.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h6M5 12h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العقود</span></a>
+    <div class="nav-section">المالية</div>
+    <a href="medflow-finance.html" class="nav-item active"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#fff" stroke-width="1.2"/><path d="M1 7h14" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">التسوية المالية</span></a>
+    <a href="medflow-invoices.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">الفواتير</span></a>
+    <a href="medflow-reports.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 7l3 3 5-7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">التقارير</span></a>
+    <div class="nav-section">النظام</div>
+    <a href="medflow-onboarding.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M8 5v6M5 8h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">تسجيل مسوّق</span></a>
+    <a href="medflow-settings.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="#fff" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">الإعدادات</span></a>
+    <a href="medflow-nav.html" class="nav-item" style="margin-top:auto"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">خريطة النظام</span></a>
+
+    <div class="sidebar-user">
+      <div class="user-av">جه</div>
+      <div><div class="user-name">جهاد اللهيبي</div><div class="user-role">مستودع مرخص · مكة</div></div>
+    </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title">التسوية المالية</div>
+    <div class="tb-spacer"></div>
+    <select style="border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:11px;background:var(--white);outline:none;direction:rtl">
+      <option>يوليو 2026</option><option>يونيو 2026</option><option>مايو 2026</option>
+    </select>
+    <button class="btn btn-out btn-sm" onclick="showToast('جارٍ تصدير التقرير...')">📤 تصدير</button>
+    <button class="btn btn-teal btn-sm" onclick="showToast('جارٍ إرسال التسوية...')">💸 إرسال التسوية</button>
+  </div>
+
+  <div class="content">
+
+    <div class="month-tabs">
+      <div class="mtab active">يوليو 2026</div>
+      <div class="mtab">يونيو 2026</div>
+      <div class="mtab">مايو 2026</div>
+      <div class="mtab">أبريل 2026</div>
+      <div class="mtab">مارس 2026</div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi" style="--ka:var(--teal)"><div class="kpi-v">1,420,000 ﷼</div><div class="kpi-l">إجمالي المبيعات</div><div class="kpi-s" style="color:var(--green)">↑ 18% عن الشهر الماضي</div></div>
+      <div class="kpi" style="--ka:var(--green)"><div class="kpi-v">28,400 ﷼</div><div class="kpi-l">إيراد ميدفلو (2%)</div><div class="kpi-s" style="color:var(--teal2)">عمولات الصفقات</div></div>
+      <div class="kpi" style="--ka:var(--amber)"><div class="kpi-v">14,200 ﷼</div><div class="kpi-l">رسوم تخزين</div><div class="kpi-s" style="color:var(--ink3)">142,000 وحدة × 0.1 ﷼</div></div>
+      <div class="kpi" style="--ka:var(--red)"><div class="kpi-v">1,377,400 ﷼</div><div class="kpi-l">صافي المسوّقين</div><div class="kpi-s" style="color:var(--ink3)">يُحوَّل آخر كل شهر</div></div>
+    </div>
+
+    <div class="cols">
+      <!-- LEFT -->
+      <div>
+        <!-- CHART -->
+        <div class="card">
+          <div class="card-title">📈 الإيرادات اليومية — يوليو 2026 (﷼)</div>
+          <div class="chart-wrap" id="chart"></div>
+          <div style="display:flex;gap:14px;font-size:10px;color:var(--ink3);margin-top:8px">
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--teal);margin-left:4px"></span>عمولات</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--amber);margin-left:4px"></span>رسوم تخزين</span>
+          </div>
+        </div>
+
+        <!-- TRANSACTIONS TABLE -->
+        <div class="card">
+          <div class="card-title">📋 سجل التسويات — يوليو 2026<span style="font-size:10px;color:var(--ink3);font-weight:500">47 معاملة</span></div>
+          <div class="tw">
+            <table>
+              <thead><tr><th>المسوّق</th><th>المبيعات</th><th>العمولة</th><th>التخزين</th><th>الشحن</th><th>الصافي</th><th>الحالة</th></tr></thead>
+              <tbody>
+                <tr><td><div class="tb">جهاد اللهيبي</div><div style="font-size:10px;color:var(--ink3)">مستودع مكة</div></td><td class="tt">142,000 ﷼</td><td class="ta">▼ 2,840 ﷼</td><td class="ta">▼ 2,100 ﷼</td><td class="ta">▼ 890 ﷼</td><td class="tg">136,170 ﷼</td><td><span class="b bg">مدفوع</span></td></tr>
+                <tr><td><div class="tb">أحمد الشمري</div><div style="font-size:10px;color:var(--ink3)">مستودع الرياض</div></td><td class="tt">218,500 ﷼</td><td class="ta">▼ 4,370 ﷼</td><td class="ta">▼ 3,200 ﷼</td><td class="ta">▼ 1,200 ﷼</td><td class="tg">209,730 ﷼</td><td><span class="b bg">مدفوع</span></td></tr>
+                <tr><td><div class="tb">سارة المالكي</div><div style="font-size:10px;color:var(--ink3)">مستودع جدة</div></td><td class="tt">98,000 ﷼</td><td class="ta">▼ 1,960 ﷼</td><td class="ta">▼ 1,400 ﷼</td><td class="ta">▼ 650 ﷼</td><td class="tg">93,990 ﷼</td><td><span class="b ba">معلق</span></td></tr>
+                <tr><td><div class="tb">محمد العتيبي</div><div style="font-size:10px;color:var(--ink3)">مستودع الدمام</div></td><td class="tt">187,000 ﷼</td><td class="ta">▼ 3,740 ﷼</td><td class="ta">▼ 2,800 ﷼</td><td class="ta">▼ 980 ﷼</td><td class="tg">179,480 ﷼</td><td><span class="b bg">مدفوع</span></td></tr>
+                <tr><td><div class="tb">نورة الزهراني</div><div style="font-size:10px;color:var(--ink3)">مستودع المدينة</div></td><td class="tt">312,000 ﷼</td><td class="ta">▼ 6,240 ﷼</td><td class="ta">▼ 4,100 ﷼</td><td class="ta">▼ 1,400 ﷼</td><td class="tg">300,260 ﷼</td><td><span class="b ba">معلق</span></td></tr>
+                <tr><td><div class="tb">خالد القحطاني</div><div style="font-size:10px;color:var(--ink3)">مستودع الطائف</div></td><td class="tt">76,500 ﷼</td><td class="ta">▼ 1,530 ﷼</td><td class="ta">▼ 980 ﷼</td><td class="ta">▼ 420 ﷼</td><td class="tg">73,570 ﷼</td><td><span class="b br">محجوز</span></td></tr>
+              </tbody>
+              <tfoot><tr style="background:var(--teall)"><td style="padding:11px 12px;font-weight:800;color:var(--navy)">الإجمالي</td><td style="padding:11px 12px;font-weight:900;color:var(--teal2)">1,034,000 ﷼</td><td style="padding:11px 12px;font-weight:900;color:var(--red)">▼ 20,680 ﷼</td><td style="padding:11px 12px;font-weight:900;color:var(--red)">▼ 14,580 ﷼</td><td style="padding:11px 12px;font-weight:900;color:var(--red)">▼ 5,540 ﷼</td><td style="padding:11px 12px;font-weight:900;color:var(--green)">993,200 ﷼</td><td></td></tr></tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- ESCROW ACTIVE -->
+        <div class="card">
+          <div class="card-title">🔒 Escrow نشطة حالياً<span class="b ba">3 صفقات</span></div>
+          <div class="tw">
+            <table>
+              <thead><tr><th>رقم الطلب</th><th>المشتري</th><th>المورد</th><th>المحجوز</th><th>منذ</th><th>الحالة</th></tr></thead>
+              <tbody>
+                <tr><td class="tb">ORD-1042</td><td>صيدلية الشفاء</td><td>جهاد اللهيبي</td><td class="tt">18,750 ﷼</td><td style="color:var(--ink3)">3 ساعات</td><td><span class="b ba">قيد التوصيل</span></td></tr>
+                <tr><td class="tb">ORD-1038</td><td>مستشفى الأمل</td><td>أحمد الشمري</td><td class="tt">142,000 ﷼</td><td style="color:var(--ink3)">يوم</td><td><span class="b ba">قيد التجهيز</span></td></tr>
+                <tr><td class="tb">ORD-1035</td><td>عيادة النور</td><td>نورة الزهراني</td><td class="tt">67,400 ﷼</td><td style="color:var(--red)">3 أيام ⚠️</td><td><span class="b br">نزاع</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+        <div class="sum-box">
+          <div class="sum-title">ملخص يوليو 2026</div>
+          <div class="sum-row"><span class="sum-lbl">إجمالي المبيعات</span><span class="sum-val">1,420,000 ﷼</span></div>
+          <div class="sum-row"><span class="sum-lbl">عمولات (2%)</span><span style="color:#FCA5A5;font-weight:700">▼ 28,400 ﷼</span></div>
+          <div class="sum-row"><span class="sum-lbl">رسوم تخزين</span><span style="color:#FCA5A5;font-weight:700">▼ 14,200 ﷼</span></div>
+          <div class="sum-row"><span class="sum-lbl">رسوم شحن</span><span style="color:#FCA5A5;font-weight:700">▼ 8,400 ﷼</span></div>
+          <div class="sum-row" style="border-bottom:none"><span style="color:#fff">إيراد ميدفلو الصافي</span><span style="color:#5EEAD4">51,000 ﷼</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📊 توزيع الإيراد</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:var(--ink3)">عمولات الصفقات</span><span style="font-weight:700;color:var(--teal2)">28,400 ﷼</span></div><div style="height:7px;background:var(--paper3);border-radius:8px;overflow:hidden"><div style="width:56%;height:100%;background:var(--teal);border-radius:8px"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:var(--ink3)">رسوم تخزين</span><span style="font-weight:700;color:var(--amber)">14,200 ﷼</span></div><div style="height:7px;background:var(--paper3);border-radius:8px;overflow:hidden"><div style="width:28%;height:100%;background:var(--amber);border-radius:8px"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:var(--ink3)">رسوم شحن</span><span style="font-weight:700;color:var(--blue,#2563EB)">8,400 ﷼</span></div><div style="height:7px;background:var(--paper3);border-radius:8px;overflow:hidden"><div style="width:16%;height:100%;background:#2563EB;border-radius:8px"></div></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📅 سجل التسويات السابقة</div>
+          <div>
+            <div class="ir"><span class="il">يونيو 2026</span><span style="font-weight:800;color:var(--green)">43,200 ﷼</span></div>
+            <div class="ir"><span class="il">مايو 2026</span><span style="font-weight:800;color:var(--green)">38,700 ﷼</span></div>
+            <div class="ir"><span class="il">أبريل 2026</span><span style="font-weight:800;color:var(--green)">31,400 ﷼</span></div>
+            <div class="ir"><span class="il">مارس 2026</span><span style="font-weight:800;color:var(--green)">22,800 ﷼</span></div>
+            <div class="ir"><span class="il">فبراير 2026</span><span style="font-weight:800;color:var(--green)">18,100 ﷼</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">⚡ إجراءات</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <button class="btn btn-teal btn-sm" style="justify-content:flex-start" onclick="showToast('جارٍ إرسال التسوية...')">💸 إرسال تسوية يوليو</button>
+            <button class="btn btn-out btn-sm" style="justify-content:flex-start" onclick="showToast('جارٍ التصدير...')">📤 تصدير Excel</button>
+            <button class="btn btn-out btn-sm" style="justify-content:flex-start" onclick="showToast('جارٍ الإرسال...')">📧 إرسال بالبريد</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+// CHART
+const data = [920,1100,800,1400,1800,2100,1600,2400,2800,3100,2600,3400,2900,3800,4200,3600,4500,4800,4200,5100,4600,5400,5800,5200,6100,5600,6400,6800,6200,7100,5800];
+const max = Math.max(...data);
+const chart = document.getElementById('chart');
+chart.innerHTML = data.slice(0,15).map((v,i) => `
+  <div class="ch-col">
+    <div class="ch-bar" style="height:${Math.round(v/max*90)}%;background:${i===14?'var(--teal)':'var(--tealm)'}"></div>
+    <div class="ch-lbl">${i+1}</div>
+  </div>
+`).join('');
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+</script>
+</body>
+</html>

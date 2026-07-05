@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — لوحة تحكم المستودع</title>
+<style>
+:root{
+  --teal:#00B5A6;--teal2:#008F83;--teal3:#006B62;
+  --teall:#F0FAFA;--tealm:#C8EDEA;--tealtext:#007A70;
+  --navy:#1B2B4B;--navy2:#0F1E36;
+  --paper:#F5F7FA;--paper2:#ECEEF3;--paper3:#E2E6EE;
+  --white:#FFFFFF;--ink:#1B2B4B;--ink2:#3D536F;--ink3:#7A90A8;
+  --green:#059669;--greenl:#ECFDF5;--greenm:#6EE7B7;
+  --amber:#D97706;--amberl:#FFFBEB;--amberm:#FCD34D;
+  --red:#DC2626;--redl:#FEF2F2;--redm:#FCA5A5;
+  --blue:#2563EB;--bluel:#EFF6FF;
+  --purple:#7C3AED;--purplel:#F5F3FF;
+  --border:#DDE3EE;--shadow:0 1px 3px rgba(27,43,75,.08);--shadow2:0 4px 16px rgba(27,43,75,.1);
+  --sidebar:220px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--paper);color:var(--ink);direction:rtl;font-size:14px}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:4px}
+
+/* ══ LAYOUT ══ */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ══ SIDEBAR ══ */
+.sidebar{width:var(--sidebar);background:var(--navy2);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-icon svg{width:20px;height:20px}
+.logo-name{font-size:15px;font-weight:900;color:#fff;letter-spacing:-.5px}
+.logo-sub{font-size:9px;color:rgba(255,255,255,.35);margin-top:1px}
+
+.nav-section{padding:16px 10px 6px;font-size:9px;font-weight:800;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;margin:1px 6px;border-radius:8px;cursor:pointer;transition:all .15s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.06)}
+.nav-item.active{background:rgba(0,181,166,.18);border:1px solid rgba(0,181,166,.25)}
+.nav-icon{width:16px;height:16px;opacity:.5;flex-shrink:0}
+.nav-item.active .nav-icon{opacity:1}
+.nav-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.55)}
+.nav-item.active .nav-label{color:#fff;font-weight:700}
+.nav-badge{margin-right:auto;background:var(--teal);color:#fff;font-size:9px;font-weight:800;border-radius:10px;padding:1px 6px}
+
+.sidebar-user{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:9px}
+.user-avatar{width:32px;height:32px;background:var(--teal);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.user-name{font-size:11px;font-weight:700;color:#fff}
+.user-role{font-size:9px;color:rgba(255,255,255,.35)}
+
+/* ══ MAIN ══ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ══ TOPBAR ══ */
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:16px;flex-shrink:0}
+.topbar-title{font-size:15px;font-weight:800;color:var(--navy)}
+.topbar-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+.topbar-spacer{flex:1}
+.topbar-search{display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--border);border-radius:9px;padding:7px 12px;width:220px}
+.topbar-search input{border:none;background:transparent;font-size:12px;color:var(--ink);outline:none;width:100%;direction:rtl}
+.topbar-search input::placeholder{color:var(--ink3)}
+.topbar-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.topbar-btn:hover{background:var(--paper)}
+.notif-dot{position:absolute;top:7px;left:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid var(--white)}
+.date-badge{background:var(--teall);border:1px solid var(--tealm);border-radius:8px;padding:5px 10px;font-size:11px;color:var(--tealtext);font-weight:700}
+
+/* ══ CONTENT ══ */
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+
+/* ══ KPI ROW ══ */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden;cursor:pointer;transition:all .2s}
+.kpi-card:hover{box-shadow:var(--shadow2);transform:translateY(-1px)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc)}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.kpi-trend{font-size:10px;font-weight:700;display:flex;align-items:center;gap:3px;border-radius:5px;padding:2px 7px}
+.kpi-trend.up{background:var(--greenl);color:var(--green)}
+.kpi-trend.down{background:var(--redl);color:var(--red)}
+.kpi-trend.neutral{background:var(--amberl);color:var(--amber)}
+.kpi-val{font-size:24px;font-weight:900;color:var(--navy);line-height:1;margin-bottom:4px}
+.kpi-lbl{font-size:11px;color:var(--ink3);font-weight:600}
+
+/* ══ GRID ══ */
+.content-grid{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:16px}
+
+/* ══ ORDERS TABLE ══ */
+.panel{background:var(--white);border:1px solid var(--border);border-radius:13px;box-shadow:var(--shadow);overflow:hidden}
+.panel-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.panel-title{font-size:13px;font-weight:800;color:var(--navy);flex:1}
+.panel-body{padding:0}
+
+.filter-tabs{display:flex;gap:4px;background:var(--paper);border-radius:8px;padding:3px}
+.ftab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;color:var(--ink3);cursor:pointer;transition:all .15s}
+.ftab.active{background:var(--white);color:var(--teal2);box-shadow:var(--shadow)}
+
+.orders-table{width:100%;border-collapse:collapse}
+.orders-table th{padding:10px 16px;text-align:right;font-size:10px;font-weight:800;color:var(--ink3);background:var(--paper);border-bottom:1px solid var(--border);white-space:nowrap;letter-spacing:.3px;text-transform:uppercase}
+.orders-table td{padding:12px 16px;border-bottom:1px solid var(--paper2);font-size:12px;color:var(--ink2);vertical-align:middle}
+.orders-table tr:last-child td{border-bottom:none}
+.orders-table tr:hover td{background:var(--paper)}
+.order-id{font-weight:800;color:var(--navy);font-size:12px}
+.order-seller{display:flex;align-items:center;gap:7px}
+.seller-av{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0}
+.seller-name{font-size:11px;font-weight:700;color:var(--navy)}
+.seller-type{font-size:9px;color:var(--ink3)}
+
+/* STATUS BADGE */
+.status{display:inline-flex;align-items:center;gap:4px;border-radius:6px;padding:3px 9px;font-size:10px;font-weight:800;white-space:nowrap}
+.status::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
+.s-new{background:#EFF6FF;color:#2563EB}
+.s-prep{background:#FFFBEB;color:#D97706}
+.s-ready{background:#F5F3FF;color:#7C3AED}
+.s-shipped{background:#ECFDF5;color:#059669}
+.s-done{background:var(--paper2);color:var(--ink3)}
+.s-issue{background:#FEF2F2;color:#DC2626}
+
+.order-amount{font-weight:800;color:var(--navy)}
+.order-date{font-size:11px;color:var(--ink3)}
+
+/* ACTION BTNS */
+.act-btns{display:flex;gap:5px}
+.act-btn{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .15s}
+.act-btn:hover{background:var(--teall);border-color:var(--tealm)}
+
+/* ══ RIGHT PANEL ══ */
+.right-col{display:flex;flex-direction:column;gap:14px}
+
+/* QUICK ACTIONS */
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px}
+.qa-btn{background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .15s}
+.qa-btn:hover{background:var(--teall);border-color:var(--tealm)}
+.qa-icon{font-size:20px;margin-bottom:5px}
+.qa-label{font-size:10px;font-weight:700;color:var(--navy)}
+
+/* INVENTORY ALERTS */
+.alert-item{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--paper2);cursor:pointer}
+.alert-item:last-child{border-bottom:none}
+.alert-item:hover{background:var(--paper)}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.alert-info{flex:1}
+.alert-name{font-size:11px;font-weight:700;color:var(--navy)}
+.alert-desc{font-size:10px;color:var(--ink3);margin-top:1px}
+.alert-qty{font-size:11px;font-weight:800}
+
+/* ACTIVITY FEED */
+.activity-item{display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid var(--paper2)}
+.activity-item:last-child{border-bottom:none}
+.act-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.act-text{font-size:11px;color:var(--ink2);line-height:1.55}
+.act-text strong{color:var(--navy);font-weight:700}
+.act-time{font-size:10px;color:var(--ink3);margin-top:2px}
+
+/* ══ BOTTOM ROW ══ */
+.bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* MINI CHART */
+.chart-wrap{padding:16px 18px}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:10px}
+.chart-bar-g{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.chart-bar{width:100%;border-radius:4px 4px 0 0;transition:height .3s}
+.chart-lbl{font-size:9px;color:var(--ink3);font-weight:600}
+.chart-val{font-size:9px;color:var(--ink2);font-weight:700}
+
+/* SELLER LIST */
+.seller-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--paper2)}
+.seller-row:last-child{border-bottom:none}
+.seller-row:hover{background:var(--paper)}
+.sr-rank{font-size:11px;font-weight:800;color:var(--ink3);width:18px;text-align:center;flex-shrink:0}
+.sr-av{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.sr-info{flex:1}
+.sr-name{font-size:11px;font-weight:700;color:var(--navy)}
+.sr-cat{font-size:10px;color:var(--ink3)}
+.sr-bar-wrap{width:80px;flex-shrink:0}
+.sr-bar{height:5px;background:var(--paper3);border-radius:5px;overflow:hidden;margin-bottom:3px}
+.sr-barf{height:100%;border-radius:5px;background:var(--teal)}
+.sr-val{font-size:10px;font-weight:800;color:var(--navy);text-align:left}
+
+/* BTN */
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-teal:hover{background:var(--teal2)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--ink2)}
+.btn-outline:hover{background:var(--paper);color:var(--navy)}
+.btn-sm{padding:5px 10px;font-size:10px}
+
+/* EMPTY */
+.empty{text-align:center;padding:32px;color:var(--ink3)}
+.empty-icon{font-size:32px;margin-bottom:8px;opacity:.4}
+.empty-text{font-size:12px}
+
+/* RESPONSIVE */
+@media(max-width:1100px){.content-grid{grid-template-columns:1fr}.right-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}.kpi-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.sidebar{display:none}.kpi-row{grid-template-columns:1fr 1fr}.bottom-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="medflow-nav.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+        <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-name">ميدفلو</div><div class="logo-sub">النظام المتكامل</div></div>
+      </a>
+    </div>
+    <div class="nav-section">الرئيسية</div>
+    <a href="medflow-dashboard.html" class="nav-item active"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">لوحة التحكم</span></a>
+    <div class="nav-section">الطلبيات</div>
+    <a href="medflow-orders-list.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">جميع الطلبات</span></a>
+    <a href="medflow-rfq.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 6h8M2 9h10M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">سوق الطلبيات</span></a>
+    <div class="nav-section">المستودع</div>
+    <a href="medflow-products.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M1 6l7-4 7 4v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المنتجات</span></a>
+    <a href="medflow-inventory.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">المخزون</span></a>
+    <a href="medflow-sfda.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1l6 3v4c0 3.5-2.5 6.5-6 7.5C2.5 14.5 0 11.5 0 8V4l8-3Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">امتثال SFDA</span></a>
+    <div class="nav-section">الأطراف</div>
+    <a href="medflow-clients.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="10" r="3" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العملاء</span></a>
+    <a href="medflow-seller.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المسوّقون</span></a>
+    <a href="medflow-contracts.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h6M5 12h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العقود</span></a>
+    <div class="nav-section">المالية</div>
+    <a href="medflow-finance.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#fff" stroke-width="1.2"/><path d="M1 7h14" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">التسوية المالية</span></a>
+    <a href="medflow-invoices.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">الفواتير</span></a>
+    <a href="medflow-reports.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 7l3 3 5-7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">التقارير</span></a>
+    <div class="nav-section">النظام</div>
+    <a href="medflow-onboarding.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M8 5v6M5 8h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">تسجيل مسوّق</span></a>
+    <a href="medflow-settings.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="#fff" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">الإعدادات</span></a>
+    <a href="medflow-nav.html" class="nav-item" style="margin-top:auto"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">خريطة النظام</span></a>
+
+    <div class="sidebar-user">
+      <div class="user-av">جه</div>
+      <div><div class="user-name">جهاد اللهيبي</div><div class="user-role">مستودع مرخص · مكة</div></div>
+    </div>
+</aside>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">لوحة تحكم المستودع</div>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="#7A90A8" stroke-width="1.4"/><path d="M11 11l3 3" stroke="#7A90A8" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <input type="text" placeholder="بحث عن طلب أو منتج...">
+      </div>
+      <div class="date-badge">الخميس، 3 يوليو 2026</div>
+      <div class="topbar-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1a5 5 0 0 1 5 5c0 2.5.5 4 1.5 5H1.5C2.5 10 3 8.5 3 6a5 5 0 0 1 5-5Z" stroke="#3D536F" stroke-width="1.3"/><path d="M6 11v.5a2 2 0 0 0 4 0V11" stroke="#3D536F" stroke-width="1.3"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="topbar-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="#3D536F" stroke-width="1.3"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="#3D536F" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- KPI ROW -->
+      <div class="kpi-row">
+        <div class="kpi-card" style="--kc:var(--teal)">
+          <div class="kpi-top">
+            <div class="kpi-icon" style="background:var(--teall)">📦</div>
+            <div class="kpi-trend up">↑ 12%</div>
+          </div>
+          <div class="kpi-val">47</div>
+          <div class="kpi-lbl">طلب اليوم</div>
+        </div>
+        <div class="kpi-card" style="--kc:var(--amber)">
+          <div class="kpi-top">
+            <div class="kpi-icon" style="background:var(--amberl)">⏳</div>
+            <div class="kpi-trend neutral">8 طلب</div>
+          </div>
+          <div class="kpi-val">8</div>
+          <div class="kpi-lbl">طلب جديد ينتظر</div>
+        </div>
+        <div class="kpi-card" style="--kc:var(--green)">
+          <div class="kpi-top">
+            <div class="kpi-icon" style="background:var(--greenl)">💰</div>
+            <div class="kpi-trend up">↑ 8%</div>
+          </div>
+          <div class="kpi-val">184K</div>
+          <div class="kpi-lbl">مبيعات هذا الأسبوع (﷼)</div>
+        </div>
+        <div class="kpi-card" style="--kc:var(--red)">
+          <div class="kpi-top">
+            <div class="kpi-icon" style="background:var(--redl)">⚠️</div>
+            <div class="kpi-trend down">تنبيه</div>
+          </div>
+          <div class="kpi-val">3</div>
+          <div class="kpi-lbl">منتج ينفد قريباً</div>
+        </div>
+      </div>
+
+      <!-- MAIN GRID -->
+      <div class="content-grid">
+
+        <!-- ORDERS TABLE -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">الطلبات الواردة</span>
+            <div class="filter-tabs">
+              <div class="ftab active" onclick="filterOrders('all',this)">الكل (47)</div>
+              <div class="ftab" onclick="filterOrders('new',this)">جديد (8)</div>
+              <div class="ftab" onclick="filterOrders('prep',this)">تجهيز (14)</div>
+              <div class="ftab" onclick="filterOrders('ready',this)">جاهز (9)</div>
+            </div>
+            <button class="btn btn-teal btn-sm" style="margin-right:8px">+ طلب يدوي</button>
+          </div>
+          <div class="panel-body">
+            <table class="orders-table" id="ordersTable">
+              <thead>
+                <tr>
+                  <th>رقم الطلب</th>
+                  <th>المسوّق</th>
+                  <th>المنتج</th>
+                  <th>الكمية</th>
+                  <th>المبلغ</th>
+                  <th>الحالة</th>
+                  <th>التاريخ</th>
+                  <th>إجراء</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTbody">
+                <tr>
+                  <td><span class="order-id">#ORD-1042</span></td>
+                  <td><div class="order-seller"><div class="seller-av" style="background:#0EA5E9">أح</div><div><div class="seller-name">أحمد الغامدي</div><div class="seller-type">مستلزمات طبية</div></div></div></td>
+                  <td>قفازات طبية لاتكس × 50 علبة</td>
+                  <td>50</td>
+                  <td class="order-amount">12,500 ﷼</td>
+                  <td><span class="status s-new">جديد</span></td>
+                  <td class="order-date">منذ 14 دقيقة</td>
+                  <td><div class="act-btns"><div class="act-btn" title="قبول" onclick="updateStatus(this,'s-prep','تجهيز')">✅</div><div class="act-btn" title="تفاصيل">👁️</div><div class="act-btn" title="رفض">❌</div></div></td>
+                </tr>
+                <tr>
+                  <td><span class="order-id">#ORD-1041</span></td>
+                  <td><div class="order-seller"><div class="seller-av" style="background:#8B5CF6">سا</div><div><div class="seller-name">سارة المالكي</div><div class="seller-type">أدوية</div></div></div></td>
+                  <td>باراسيتامول 500mg × 200 علبة</td>
+                  <td>200</td>
+                  <td class="order-amount">8,200 ﷼</td>
+                  <td><span class="status s-new">جديد</span></td>
+                  <td class="order-date">منذ 32 دقيقة</td>
+                  <td><div class="act-btns"><div class="act-btn" onclick="updateStatus(this,'s-prep','تجهيز')">✅</div><div class="act-btn">👁️</div><div class="act-btn">❌</div></div></td>
+                </tr>
+                <tr>
+                  <td><span class="order-id">#ORD-1040</span></td>
+                  <td><div class="order-seller"><div class="seller-av" style="background:#059669">مح</div><div><div class="seller-name">محمد العتيبي</div><div class="seller-type">تجميل طبي</div></div></div></td>
+                  <td>كريم فيتامين C طبي × 80 قطعة</td>
+                  <td>80</td>
+                  <td class="order-amount">24,000 ﷼</td>
+                  <td><span class="status s-prep">تجهيز</span></td>
+                  <td class="order-date">منذ ساعة</td>
+                  <td><div class="act-btns"><div class="act-btn" onclick="updateStatus(this,'s-ready','جاهز')">📦</div><div class="act-btn">👁️</div><div class="act-btn">❌</div></div></td>
+                </tr>
+                <tr>
+                  <td><span class="order-id">#ORD-1039</span></td>
+                  <td><div class="order-seller"><div class="seller-av" style="background:#D97706">نو</div><div><div class="seller-name">نورة الزهراني</div><div class="seller-type">مستلزمات طبية</div></div></div></td>
+                  <td>ضمادات معقمة × 500 حزمة</td>
+                  <td>500</td>
+                  <td class="order-amount">37,500 ﷼</td>
+                  <td><span class="status s-ready">جاهز للشحن</span></td>
+                  <td class="order-date">منذ 3 ساعات</td>
+                  <td><div class="act-btns"><div class="act-btn" onclick="updateStatus(this,'s-shipped','شُحن')">🚚</div><div class="act-btn">👁️</div><div class="act-btn">🖨️</div></div></td>
+                </tr>
+                <tr>
+                  <td><span class="order-id">#ORD-1038</span></td>
+                  <td><div class="order-seller"><div class="seller-av" style="background:#DC2626">خا</div><div><div class="seller-name">خالد الشمري</div><div class="seller-type">أدوية</div></div></div></td>
+                  <td>أوميغا 3 × 150 علبة</td>
+                  <td>150</td>
+                  <td class="order-amount">19,500 ﷼</td>
+                  <td><span class="status s-issue">مشكلة</span></td>
+                  <td class="order-date">أمس</td>
+                  <td><div class="act-btns"><div class="act-btn">💬</div><div class="act-btn">👁️</div><div class="act-btn">🔄</div></div></td>
+                </tr>
+                <tr>
+                  <td><span class="order-id">#ORD-1037</span></td>
+                  <td><div class="order-seller"><div class="seller-av" style="background:#0EA5E9">ري</div><div><div class="seller-name">ريم القحطاني</div><div class="seller-type">تجميل طبي</div></div></div></td>
+                  <td>واقي شمس SPF50 طبي × 60 قطعة</td>
+                  <td>60</td>
+                  <td class="order-amount">15,000 ﷼</td>
+                  <td><span class="status s-shipped">شُحن</span></td>
+                  <td class="order-date">أمس</td>
+                  <td><div class="act-btns"><div class="act-btn" onclick="updateStatus(this,'s-done','مكتمل')">✔️</div><div class="act-btn">👁️</div><div class="act-btn">📄</div></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RIGHT COL -->
+        <div class="right-col">
+
+          <!-- QUICK ACTIONS -->
+          <div class="panel">
+            <div class="panel-header"><span class="panel-title">إجراءات سريعة</span></div>
+            <div class="quick-actions">
+              <div class="qa-btn" onclick="alert('استقبال بضاعة')"><div class="qa-icon">📥</div><div class="qa-label">استقبال بضاعة</div></div>
+              <div class="qa-btn" onclick="alert('فاتورة جديدة')"><div class="qa-icon">🧾</div><div class="qa-label">فاتورة جديدة</div></div>
+              <div class="qa-btn" onclick="alert('جرد سريع')"><div class="qa-icon">📋</div><div class="qa-label">جرد سريع</div></div>
+              <div class="qa-btn" onclick="alert('تقرير اليوم')"><div class="qa-icon">📊</div><div class="qa-label">تقرير اليوم</div></div>
+              <div class="qa-btn" onclick="alert('طلب توريد')"><div class="qa-icon">🔄</div><div class="qa-label">طلب توريد</div></div>
+              <div class="qa-btn" onclick="alert('مسوّق جديد')"><div class="qa-icon">➕</div><div class="qa-label">مسوّق جديد</div></div>
+            </div>
+          </div>
+
+          <!-- INVENTORY ALERTS -->
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">⚠️ تنبيهات المخزون</span>
+              <button class="btn btn-outline btn-sm">عرض الكل</button>
+            </div>
+            <div class="panel-body">
+              <div class="alert-item">
+                <div class="alert-dot" style="background:var(--red)"></div>
+                <div class="alert-info"><div class="alert-name">باراسيتامول 500mg</div><div class="alert-desc">أدوية · حد إعادة الطلب: 500 علبة</div></div>
+                <div class="alert-qty" style="color:var(--red)">48 علبة</div>
+              </div>
+              <div class="alert-item">
+                <div class="alert-dot" style="background:var(--amber)"></div>
+                <div class="alert-info"><div class="alert-name">قفازات لاتكس M</div><div class="alert-desc">مستلزمات · حد إعادة الطلب: 200 علبة</div></div>
+                <div class="alert-qty" style="color:var(--amber)">187 علبة</div>
+              </div>
+              <div class="alert-item">
+                <div class="alert-dot" style="background:var(--amber)"></div>
+                <div class="alert-info"><div class="alert-name">كريم فيتامين C</div><div class="alert-desc">تجميل طبي · صلاحية: 45 يوم</div></div>
+                <div class="alert-qty" style="color:var(--amber)">210 قطعة</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTIVITY -->
+          <div class="panel">
+            <div class="panel-header"><span class="panel-title">آخر الأنشطة</span></div>
+            <div class="panel-body">
+              <div class="activity-item">
+                <div class="act-ic" style="background:var(--greenl)">✅</div>
+                <div><div class="act-text">تم شحن طلب <strong>#ORD-1035</strong> للصيدلية المركزية</div><div class="act-time">منذ 20 دقيقة</div></div>
+              </div>
+              <div class="activity-item">
+                <div class="act-ic" style="background:var(--bluel)">📦</div>
+                <div><div class="act-text">استقبال بضاعة جديدة من <strong>مسوّق: محمد العتيبي</strong> — 80 منتج</div><div class="act-time">منذ ساعة</div></div>
+              </div>
+              <div class="activity-item">
+                <div class="act-ic" style="background:var(--amberl)">⚠️</div>
+                <div><div class="act-text">تنبيه مخزون: <strong>باراسيتامول 500mg</strong> وصل للحد الأدنى</div><div class="act-time">منذ 2 ساعة</div></div>
+              </div>
+              <div class="activity-item">
+                <div class="act-ic" style="background:var(--purplel)">👤</div>
+                <div><div class="act-text">تسجيل مسوّق جديد: <strong>ريم القحطاني</strong></div><div class="act-time">منذ 3 ساعات</div></div>
+              </div>
+              <div class="activity-item">
+                <div class="act-ic" style="background:var(--greenl)">💰</div>
+                <div><div class="act-text">تسوية مالية أسبوعية للمسوّقين — <strong>إجمالي 84,200 ﷼</strong></div><div class="act-time">أمس 4:30م</div></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BOTTOM ROW -->
+      <div class="bottom-row">
+
+        <!-- WEEKLY CHART -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">حجم الطلبات — الأسبوع الحالي</span>
+            <button class="btn btn-outline btn-sm">تقرير كامل</button>
+          </div>
+          <div class="chart-wrap">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span style="font-size:11px;color:var(--ink3)">الطلبات اليومية</span>
+              <span style="font-size:13px;font-weight:800;color:var(--green)">↑ 8% عن الأسبوع الماضي</span>
+            </div>
+            <div class="chart-bars">
+              <div class="chart-bar-g"><div class="chart-val">32</div><div class="chart-bar" style="height:52%;background:var(--tealm)"></div><div class="chart-lbl">أحد</div></div>
+              <div class="chart-bar-g"><div class="chart-val">41</div><div class="chart-bar" style="height:66%;background:var(--tealm)"></div><div class="chart-lbl">اثنين</div></div>
+              <div class="chart-bar-g"><div class="chart-val">38</div><div class="chart-bar" style="height:61%;background:var(--tealm)"></div><div class="chart-lbl">ثلاثاء</div></div>
+              <div class="chart-bar-g"><div class="chart-val">55</div><div class="chart-bar" style="height:89%;background:var(--teal)"></div><div class="chart-lbl">أربعاء</div></div>
+              <div class="chart-bar-g"><div class="chart-val">47</div><div class="chart-bar" style="height:76%;background:var(--teal);border-radius:4px 4px 0 0;box-shadow:0 0 0 2px var(--teal) inset"></div><div class="chart-lbl" style="color:var(--tealtext);font-weight:800">اليوم</div></div>
+              <div class="chart-bar-g"><div class="chart-val">—</div><div class="chart-bar" style="height:8%;background:var(--paper3)"></div><div class="chart-lbl">جمعة</div></div>
+              <div class="chart-bar-g"><div class="chart-val">—</div><div class="chart-bar" style="height:8%;background:var(--paper3)"></div><div class="chart-lbl">سبت</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOP SELLERS -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">أفضل المسوّقين — هذا الشهر</span>
+            <button class="btn btn-outline btn-sm">عرض الكل</button>
+          </div>
+          <div class="panel-body">
+            <div class="seller-row">
+              <div class="sr-rank">1</div>
+              <div class="sr-av" style="background:#0EA5E9">أح</div>
+              <div class="sr-info"><div class="sr-name">أحمد الغامدي</div><div class="sr-cat">مستلزمات طبية</div></div>
+              <div class="sr-bar-wrap"><div class="sr-bar"><div class="sr-barf" style="width:95%"></div></div><div class="sr-val">142K ﷼</div></div>
+            </div>
+            <div class="seller-row">
+              <div class="sr-rank">2</div>
+              <div class="sr-av" style="background:#8B5CF6">مح</div>
+              <div class="sr-info"><div class="sr-name">محمد العتيبي</div><div class="sr-cat">تجميل طبي</div></div>
+              <div class="sr-bar-wrap"><div class="sr-bar"><div class="sr-barf" style="width:78%"></div></div><div class="sr-val">118K ﷼</div></div>
+            </div>
+            <div class="seller-row">
+              <div class="sr-rank">3</div>
+              <div class="sr-av" style="background:#059669">سا</div>
+              <div class="sr-info"><div class="sr-name">سارة المالكي</div><div class="sr-cat">أدوية</div></div>
+              <div class="sr-bar-wrap"><div class="sr-bar"><div class="sr-barf" style="width:62%"></div></div><div class="sr-val">94K ﷼</div></div>
+            </div>
+            <div class="seller-row">
+              <div class="sr-rank">4</div>
+              <div class="sr-av" style="background:#D97706">نو</div>
+              <div class="sr-info"><div class="sr-name">نورة الزهراني</div><div class="sr-cat">مستلزمات طبية</div></div>
+              <div class="sr-bar-wrap"><div class="sr-bar"><div class="sr-barf" style="width:48%"></div></div><div class="sr-val">72K ﷼</div></div>
+            </div>
+            <div class="seller-row">
+              <div class="sr-rank">5</div>
+              <div class="sr-av" style="background:#DC2626">ري</div>
+              <div class="sr-info"><div class="sr-name">ريم القحطاني</div><div class="sr-cat">تجميل طبي</div></div>
+              <div class="sr-bar-wrap"><div class="sr-bar"><div class="sr-barf" style="width:31%"></div></div><div class="sr-val">47K ﷼</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Filter orders
+function filterOrders(type, el) {
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const rows = document.querySelectorAll('#ordersTbody tr');
+  const map = {new:'s-new', prep:'s-prep', ready:'s-ready', shipped:'s-shipped'};
+  rows.forEach(r => {
+    const badge = r.querySelector('.status');
+    if (type === 'all' || (badge && badge.classList.contains(map[type]))) {
+      r.style.display = '';
+    } else {
+      r.style.display = 'none';
+    }
+  });
+}
+
+// Update order status
+function updateStatus(btn, newClass, label) {
+  const row = btn.closest('tr');
+  const badge = row.querySelector('.status');
+  badge.className = 'status ' + newClass;
+  badge.textContent = label;
+
+  // Show toast
+  const toast = document.createElement('div');
+  toast.textContent = 'تم تحديث الحالة إلى: ' + label;
+  Object.assign(toast.style, {
+    position:'fixed', bottom:'24px', left:'50%', transform:'translateX(-50%)',
+    background:getComputedStyle(document.documentElement).getPropertyValue('--navy'),
+    color:'#fff', padding:'10px 20px', borderRadius:'10px',
+    fontSize:'12px', fontWeight:'700', zIndex:'9999',
+    boxShadow:'0 4px 16px rgba(0,0,0,.2)'
+  });
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+</script>
+</body>
+</html>

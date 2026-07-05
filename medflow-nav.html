@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — خريطة النظام</title>
+<style>
+:root{--teal:#00B5A6;--teal2:#008F83;--teall:#F0FAFA;--tealm:#C8EDEA;--navy:#1B2B4B;--navy2:#0F1E36;--paper:#F5F7FA;--white:#fff;--ink:#1B2B4B;--ink3:#7A90A8;--green:#059669;--greenl:#ECFDF5;--amber:#D97706;--amberl:#FFFBEB;--border:#DDE3EE;--shadow:0 2px 8px rgba(27,43,75,.1);--shadow2:0 8px 24px rgba(27,43,75,.14)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--navy2);color:var(--ink);direction:rtl}
+.hero{text-align:center;padding:48px 24px 32px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,181,166,.12) 0%,transparent 70%);pointer-events:none}
+.logo-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px}
+.logo-ic{width:48px;height:48px;background:var(--teal);border-radius:14px;display:flex;align-items:center;justify-content:center}
+.logo-name{font-size:28px;font-weight:900;color:#fff}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.4);margin-top:4px}
+.progress-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px}
+.prog-bar{width:200px;height:8px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden}
+.prog-fill{height:100%;background:var(--teal);border-radius:8px;width:100%}
+.prog-text{font-size:12px;color:rgba(255,255,255,.5);font-weight:700}
+
+.sections{max-width:1100px;margin:0 auto;padding:0 24px 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.section-title{grid-column:1/-1;font-size:11px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;padding-top:8px}
+
+.page-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;cursor:pointer;transition:all .2s;text-decoration:none;display:block;position:relative}
+.page-card:hover{background:rgba(0,181,166,.1);border-color:rgba(0,181,166,.3);transform:translateY(-2px)}
+.page-card.done{border-color:rgba(0,181,166,.2)}
+.page-card.done::after{content:'✅';position:absolute;top:12px;left:12px;font-size:12px}
+.page-card.wip{border-color:rgba(253,230,138,.15)}
+.page-card.wip::after{content:'🔨';position:absolute;top:12px;left:12px;font-size:12px}
+.pc-icon{font-size:28px;margin-bottom:10px}
+.pc-name{font-size:13px;font-weight:800;color:#fff;margin-bottom:4px}
+.pc-desc{font-size:11px;color:rgba(255,255,255,.4);line-height:1.5}
+.pc-tag{display:inline-block;font-size:9px;font-weight:800;border-radius:5px;padding:2px 7px;margin-top:8px}
+.tag-done{background:rgba(0,181,166,.2);color:#5EEAD4}
+.tag-wip{background:rgba(253,230,138,.15);color:#FDE68A}
+.tag-next{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="logo-row">
+    <div class="logo-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="logo-name">ميدفلو</div>
+  </div>
+  <div class="hero-sub">منصة التوزيع الطبي المرخصة · مكة المكرمة</div>
+  <div class="progress-row">
+    <div class="prog-bar"><div class="prog-fill"></div></div>
+    <div class="prog-text">16 من 16 شاشة جاهزة ✅</div>
+  </div>
+</div>
+
+<div class="sections">
+
+  <div class="section-title">الشاشات الجاهزة ✅</div>
+
+  <a href="medflow-dashboard.html" class="page-card done">
+    <div class="pc-icon">📊</div>
+    <div class="pc-name">لوحة التحكم</div>
+    <div class="pc-desc">KPIs، طلبات، مخزون، رسوم بيانية</div>
+    <span class="pc-tag tag-done">جاهزة</span>
+  </a>
+
+  <a href="medflow-products.html" class="page-card done">
+    <div class="pc-icon">📦</div>
+    <div class="pc-name">عرض المنتجات</div>
+    <div class="pc-desc">كتالوج المنتجات، فلترة، grid/list، إضافة منتج</div>
+    <span class="pc-tag tag-done">جاهزة</span>
+  </a>
+
+  <a href="medflow-seller.html" class="page-card done">
+    <div class="pc-icon">👤</div>
+    <div class="pc-name">ملف المسوّق</div>
+    <div class="pc-desc">بيانات، منتجاته، طلباته، ماليته، عقده</div>
+    <span class="pc-tag tag-done">جاهزة</span>
+  </a>
+
+  <a href="medflow-rfq.html" class="page-card done">
+    <div class="pc-icon">🏪</div>
+    <div class="pc-name">سوق الطلبيات RFQ</div>
+    <div class="pc-desc">طلبيات متعددة البنود، مقارنة موردين، Escrow</div>
+    <span class="pc-tag tag-done">جاهزة</span>
+  </a>
+
+  <a href="medflow-order-detail.html" class="page-card done">
+    <div class="pc-icon">🧾</div>
+    <div class="pc-name">تفاصيل الطلب</div>
+    <div class="pc-desc">البنود، timeline، Escrow، تأكيد استلام، نزاع</div>
+    <span class="pc-tag tag-done">جاهزة</span>
+  </a>
+
+  <a href="medflow-finance.html" class="page-card done">
+    <div class="pc-icon">💰</div>
+    <div class="pc-name">التسوية المالية</div>
+    <div class="pc-desc">عمولات، رسوم تخزين، Escrow نشطة، تقارير</div>
+    <span class="pc-tag tag-done">جاهزة</span>
+  </a>
+
+  <a href="medflow-inventory.html" class="page-card done">
+    <div class="pc-icon">🗄️</div>
+    <div class="pc-name">المخزون التفصيلي</div>
+    <div class="pc-desc">مستويات، صلاحيات، تنبيهات، إيداع بضاعة</div>
+    <span class="pc-tag tag-done">جاهزة</span>
+  </a>
+
+  <div class="section-title">✅ الشاشات المكتملة</div>
+
+  <a href="medflow-orders-list.html" class="page-card done">
+    <div class="pc-icon">📋</div>
+    <div class="pc-name">قائمة الطلبات</div>
+    <div class="pc-desc">جميع الطلبات الواردة، فلترة، تتبع</div>
+    <span class="pc-tag tag-wip">قريباً</span>
+  </a>
+
+  <a href="medflow-clients.html" class="page-card done">
+    <div class="pc-icon">🏥</div>
+    <div class="pc-name">العملاء والمشترين</div>
+    <div class="pc-desc">صيدليات، عيادات، مستشفيات خاصة</div>
+    <span class="pc-tag tag-wip">قريباً</span>
+  </a>
+
+  <a href="medflow-contracts.html" class="page-card done">
+    <div class="pc-icon">📄</div>
+    <div class="pc-name">إدارة العقود</div>
+    <div class="pc-desc">توقيع، تجديد، شروط، عمولات مخصصة</div>
+    <span class="pc-tag tag-wip">قريباً</span>
+  </a>
+
+  <a href="medflow-sfda.html" class="page-card done">
+    <div class="pc-icon">🛡️</div>
+    <div class="pc-name">امتثال SFDA</div>
+    <div class="pc-desc">تتبع التراخيص، الصلاحيات، التنبيهات</div>
+    <span class="pc-tag tag-wip">قريباً</span>
+  </a>
+
+  <a href="medflow-onboarding.html" class="page-card done">
+    <div class="pc-icon">🚀</div>
+    <div class="pc-name">تسجيل مسوّق جديد</div>
+    <div class="pc-desc">onboarding خطوة بخطوة، رفع مستندات</div>
+    <span class="pc-tag tag-wip">قريباً</span>
+  </a>
+
+  <a href="medflow-invoices.html" class="page-card done">
+    <div class="pc-icon">🧾</div>
+    <div class="pc-name">الفواتير</div>
+    <div class="pc-desc">فواتير ضريبية، PDF، إرسال تلقائي</div>
+    <span class="pc-tag tag-wip">قريباً</span>
+  </a>
+
+  <a href="medflow-reports.html" class="page-card done">
+    <div class="pc-icon">📈</div>
+    <div class="pc-name">التقارير</div>
+    <div class="pc-desc">مبيعات، مخزون، أداء موردين، تصدير</div>
+    <span class="pc-tag tag-wip">قريباً</span>
+  </a>
+
+  <a href="medflow-settings.html" class="page-card done">
+    <div class="pc-icon">⚙️</div>
+    <div class="pc-name">الإعدادات</div>
+    <div class="pc-desc">صلاحيات، إشعارات، بيانات الشركة</div>
+    <span class="pc-tag tag-wip">قريباً</span>
+  </a>
+
+</div>
+</body>
+</html>

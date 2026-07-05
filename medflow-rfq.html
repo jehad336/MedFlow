@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميدفلو — سوق الطلبيات RFQ</title>
+<style>
+:root{
+  --teal:#00B5A6;--teal2:#008F83;--teall:#F0FAFA;--tealm:#C8EDEA;--tealtext:#007A70;
+  --navy:#1B2B4B;--navy2:#0F1E36;
+  --paper:#F5F7FA;--paper2:#ECEEF3;--paper3:#E2E6EE;
+  --white:#FFFFFF;--ink:#1B2B4B;--ink2:#3D536F;--ink3:#7A90A8;
+  --green:#059669;--greenl:#ECFDF5;
+  --amber:#D97706;--amberl:#FFFBEB;--amberm:#FCD34D;
+  --red:#DC2626;--redl:#FEF2F2;
+  --blue:#2563EB;--bluel:#EFF6FF;
+  --purple:#7C3AED;--purplel:#F5F3FF;
+  --border:#DDE3EE;
+  --shadow:0 1px 3px rgba(27,43,75,.08);
+  --shadow2:0 6px 20px rgba(27,43,75,.11);
+  --sidebar:220px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--paper);color:var(--ink);direction:rtl;font-size:14px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:4px}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--navy2);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-name{font-size:15px;font-weight:900;color:#fff}
+.logo-sub{font-size:9px;color:rgba(255,255,255,.35);margin-top:1px}
+.nav-section{padding:16px 10px 6px;font-size:9px;font-weight:800;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;margin:1px 6px;border-radius:8px;cursor:pointer;transition:all .15s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.06)}
+.nav-item.active{background:rgba(0,181,166,.18);border:1px solid rgba(0,181,166,.25)}
+.nav-icon{width:16px;height:16px;opacity:.5;flex-shrink:0}
+.nav-item.active .nav-icon{opacity:1}
+.nav-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.55)}
+.nav-item.active .nav-label{color:#fff;font-weight:700}
+.nav-badge{margin-right:auto;background:var(--teal);color:#fff;font-size:9px;font-weight:800;border-radius:10px;padding:1px 6px}
+.sidebar-user{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:9px}
+.user-av{width:34px;height:34px;border-radius:10px;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.user-name{font-size:11px;font-weight:700;color:#fff}
+.user-role{font-size:9px;color:rgba(255,255,255,.35)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.tb-title{font-size:15px;font-weight:800;color:var(--navy)}
+.tb-sub{font-size:11px;color:var(--ink3)}
+.tb-spacer{flex:1}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+.btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:var(--teal2)}
+.btn-out{background:transparent;border:1px solid var(--border);color:var(--ink2)}.btn-out:hover{background:var(--paper)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#047857}
+.btn-red{background:var(--red);color:#fff}
+.btn-sm{padding:6px 12px;font-size:11px}
+.btn-xs{padding:4px 9px;font-size:10px}
+
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+
+/* VIEW SWITCHER */
+.view-tabs{display:flex;gap:6px;margin-bottom:18px}
+.view-tab{padding:8px 18px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--ink3);transition:all .15s}
+.view-tab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+/* ── VIEW: MY ORDERS (طلباتي) ── */
+.orders-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.orders-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.ostat{background:var(--white);border:1px solid var(--border);border-radius:11px;padding:13px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px}
+.ostat-ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ostat-v{font-size:18px;font-weight:900;color:var(--navy);line-height:1}
+.ostat-l{font-size:10px;color:var(--ink3);font-weight:600}
+
+.order-card{background:var(--white);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden;transition:all .2s}
+.order-card:hover{box-shadow:var(--shadow2)}
+.oc-head{padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.oc-info{flex:1}
+.oc-id{font-size:10px;font-weight:800;color:var(--ink3)}
+.oc-name{font-size:13px;font-weight:800;color:var(--navy);margin-top:2px}
+.oc-meta{font-size:11px;color:var(--ink3);margin-top:3px}
+.oc-stats{display:flex;gap:10px;align-items:center;flex-shrink:0}
+.oc-bnd{text-align:center}
+.oc-bnd-v{font-size:16px;font-weight:900;color:var(--navy);line-height:1}
+.oc-bnd-l{font-size:9px;color:var(--ink3);font-weight:600}
+.oc-chevron{color:var(--ink3);transition:transform .2s;font-size:18px;flex-shrink:0}
+.oc-chevron.open{transform:rotate(180deg)}
+
+/* ORDER BODY — BIDS TABLE */
+.oc-body{border-top:1px solid var(--paper2);padding:14px 16px;display:none}
+.oc-body.open{display:block}
+
+.bids-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.bs-card{background:var(--paper);border-radius:10px;padding:11px;text-align:center}
+.bs-v{font-size:15px;font-weight:900;color:var(--navy);line-height:1;margin-bottom:3px}
+.bs-l{font-size:10px;color:var(--ink3);font-weight:600}
+
+/* BIDS COMPARISON TABLE */
+.bids-table-wrap{overflow-x:auto;border-radius:11px;border:1px solid var(--border);margin-bottom:14px}
+.bids-table{width:100%;border-collapse:collapse;font-size:11px;min-width:700px}
+.bids-table th{background:var(--paper2);color:var(--navy);font-weight:800;font-size:10px;padding:9px 12px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0}
+.bids-table th.supplier-col{background:var(--navy2);color:rgba(255,255,255,.7)}
+.bids-table td{padding:9px 12px;border-bottom:1px solid var(--paper2);vertical-align:middle}
+.bids-table tr:last-child td{border-bottom:none}
+.bids-table tr:hover td{background:var(--paper)}
+.bids-table .item-name{font-weight:700;color:var(--navy);white-space:nowrap}
+.bids-table .item-qty{color:var(--ink3)}
+.bids-table .price-cell{font-weight:800;color:var(--navy);text-align:center}
+.bids-table .price-best{color:var(--green);background:var(--greenl);border-radius:6px;padding:2px 7px;display:inline-block}
+.bids-table .price-na{color:var(--ink3);text-align:center}
+.bids-table .total-row td{background:var(--teall);font-weight:800;border-top:2px solid var(--tealm)}
+
+/* SUPPLIER HEADER */
+.sup-hd{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sup-av{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0}
+.sup-name{font-size:10px;font-weight:700}
+.sup-rating{font-size:9px;color:var(--amber)}
+
+/* SELECT CONTROLS */
+.select-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.select-info{font-size:11px;color:var(--ink2)}
+.select-actions{display:flex;gap:8px}
+
+/* ── VIEW: INCOMING (طلبيات واردة) ── */
+.incoming-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s}
+.incoming-card:hover{box-shadow:var(--shadow2);border-color:var(--tealm)}
+.ic-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.ic-av{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0}
+.ic-info{flex:1}
+.ic-id{font-size:10px;font-weight:800;color:var(--ink3)}
+.ic-requester{font-size:13px;font-weight:800;color:var(--navy);margin-top:2px}
+.ic-city{font-size:11px;color:var(--ink3)}
+.ic-deadline{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px}
+.ic-items{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.ic-item{font-size:10px;color:var(--ink2);background:var(--paper2);border-radius:6px;padding:3px 9px;font-weight:600}
+.ic-item-more{font-size:10px;color:var(--teal2);font-weight:800;background:var(--teall);border-radius:6px;padding:3px 9px}
+.ic-footer{display:flex;align-items:center;justify-content:space-between}
+.ic-coverage{font-size:11px;color:var(--ink2)}
+.ic-coverage span{font-weight:800;color:var(--teal2)}
+
+/* NEW ORDER FORM */
+.new-order-wrap{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+.form-section{margin-bottom:20px}
+.form-sec-title{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--paper3);display:flex;align-items:center;gap:6px}
+.fi{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fi-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.fl{font-size:11px;font-weight:800;color:var(--navy)}
+.fh{font-size:10px;color:var(--ink3)}
+.fi input,.fi select,.fi textarea{border:1px solid var(--border);border-radius:9px;padding:8px 11px;font-size:12px;color:var(--ink);background:var(--paper);outline:none;direction:rtl;font-family:inherit;transition:border-color .15s;width:100%}
+.fi input:focus,.fi select:focus{border-color:var(--teal);background:var(--white)}
+
+/* ITEMS TABLE (in new order) */
+.items-table-wrap{border-radius:11px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
+.items-table{width:100%;border-collapse:collapse;font-size:12px}
+.items-table th{background:var(--paper2);color:var(--navy);font-weight:800;font-size:10px;padding:9px 12px;text-align:right;border-bottom:1px solid var(--border)}
+.items-table td{padding:7px 10px;border-bottom:1px solid var(--paper2);vertical-align:middle}
+.items-table tr:last-child td{border-bottom:none}
+.items-table input,.items-table select{border:1px solid var(--border);border-radius:7px;padding:5px 8px;font-size:11px;background:var(--paper);outline:none;direction:rtl;font-family:inherit;width:100%}
+.items-table input:focus,.items-table select:focus{border-color:var(--teal);background:var(--white)}
+.row-num{font-size:10px;font-weight:800;color:var(--ink3);text-align:center;width:28px}
+.del-btn{width:24px;height:24px;border-radius:6px;background:var(--redl);color:var(--red);border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.del-btn:hover{background:var(--red);color:#fff}
+.add-row-btn{width:100%;padding:9px;background:var(--paper);border:1.5px dashed var(--border);border-radius:9px;color:var(--teal2);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit}
+.add-row-btn:hover{background:var(--teall);border-color:var(--teal)}
+
+/* ORDER SUMMARY */
+.order-summary{background:var(--teall);border:1.5px solid var(--tealm);border-radius:12px;padding:16px;margin-bottom:16px}
+.os-title{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.os-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--tealm)}
+.os-row:last-child{border-bottom:none;font-weight:900;font-size:14px;padding-top:10px}
+
+/* ESCROW BADGE */
+.escrow-badge{display:flex;align-items:center;gap:8px;background:var(--navy);border-radius:10px;padding:12px 16px;margin-bottom:16px}
+.eb-text{font-size:11px;color:rgba(255,255,255,.7);line-height:1.6;flex:1}
+.eb-text strong{color:#fff}
+
+/* BADGE */
+.b{display:inline-flex;align-items:center;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800}
+.bt{background:var(--teall);color:var(--teal2)}
+.bg{background:var(--greenl);color:var(--green)}
+.ba{background:var(--amberl);color:var(--amber)}
+.br{background:var(--redl);color:var(--red)}
+.bb{background:var(--bluel);color:var(--blue)}
+.bp{background:var(--purplel);color:var(--purple)}
+.bn{background:var(--paper3);color:var(--ink2)}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(15,30,54,.55);backdrop-filter:blur(5px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.modal{background:var(--white);border-radius:18px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.22)}
+.modal-hd{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.modal-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.modal-title{font-size:14px;font-weight:800;color:var(--navy);flex:1}
+.modal-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0}
+.modal-body{padding:18px 20px}
+.modal-ft{padding:13px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+
+/* OFFER SUBMIT MODAL */
+.offer-item-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--paper2)}
+.offer-item-row:last-child{border-bottom:none}
+.oir-name{font-size:12px;font-weight:700;color:var(--navy)}
+.oir-qty{font-size:10px;color:var(--ink3)}
+.oir-price input{width:90px;border:1px solid var(--border);border-radius:7px;padding:5px 8px;font-size:12px;background:var(--paper);outline:none;direction:rtl;font-family:inherit;text-align:center}
+.oir-price input:focus{border-color:var(--teal)}
+.oir-na{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--ink3)}
+.oir-check{width:14px;height:14px;cursor:pointer}
+
+/* WAREHOUSE SELECTOR */
+.wh-option{display:flex;align-items:center;justify-content:space-between;background:var(--paper);border:1.5px solid var(--border);border-radius:9px;padding:10px 13px;cursor:pointer;transition:all .15s}
+.wh-option:hover{border-color:var(--tealm);background:var(--teall)}
+.wh-option.selected{border-color:var(--teal);background:var(--teall)}
+.wh-left{display:flex;align-items:center;gap:9px}
+.wh-av{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.wh-name{font-size:12px;font-weight:700;color:var(--navy)}
+.wh-meta{font-size:10px;color:var(--ink3)}
+.wh-price{font-size:13px;font-weight:900;color:var(--navy)}
+.wh-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:all .15s}
+.wh-option.selected .wh-check{background:var(--teal);border-color:var(--teal);color:#fff}
+.wh-confirm-row{display:flex;justify-content:flex-end;margin-top:10px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+@media(max-width:1000px){.orders-stats{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.sidebar{display:none}.content{padding:14px}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div><div class="logo-name">ميدفلو</div><div class="logo-sub">سوق الطلبيات</div></div>
+  </div>
+  <div class="nav-section">الرئيسية</div>
+  <a href="medflow-dashboard.html" class="nav-item">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/></svg>
+    <span class="nav-label">لوحة التحكم</span>
+  </a>
+  <div class="nav-section">الطلبيات</div>
+  <a href="#" class="nav-item active" onclick="switchView('myorders');return false">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 7h10M2 10h8M2 13h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <span class="nav-label">طلبياتي</span>
+    <span class="nav-badge">4</span>
+  </a>
+  <a href="#" class="nav-item" onclick="switchView('incoming');return false">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h12" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <span class="nav-label">طلبيات واردة</span>
+    <span class="nav-badge">7</span>
+  </a>
+  <a href="#" class="nav-item" onclick="switchView('neworder');return false">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M8 5v6M5 8h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <span class="nav-label">طلبية جديدة</span>
+  </a>
+  <div class="nav-section">الصفقات</div>
+  <a href="#" class="nav-item">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#fff" stroke-width="1.2"/><path d="M8 5v3l2 2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <span class="nav-label">Escrow النشطة</span>
+    <span class="nav-badge" style="background:var(--amber)">3</span>
+  </a>
+  <a href="#" class="nav-item">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#fff" stroke-width="1.2"/><path d="M1 7h14" stroke="#fff" stroke-width="1.2"/></svg>
+    <span class="nav-label">التسويات</span>
+  </a>
+  <div class="sidebar-user">
+    <div class="user-av">جه</div>
+    <div><div class="user-name">جهاد اللهيبي</div><div class="user-role">مستودع مرخص · مكة</div></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="tb-title" id="topbarTitle">طلبياتي</div>
+      <div class="tb-sub">الدفع بنظام Escrow الآمن — عمولة ميدفلو 2% فقط</div>
+    </div>
+    <div class="tb-spacer"></div>
+    <button class="btn btn-out btn-sm" id="topbarSecBtn" onclick="switchView('neworder')">+ طلبية جديدة</button>
+    <button class="btn btn-teal btn-sm" id="topbarMainBtn" onclick="switchView('incoming')">📥 الطلبيات الواردة (7)</button>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ VIEW: MY ORDERS ══ -->
+    <div id="view-myorders">
+      <div class="orders-stats">
+        <div class="ostat"><div class="ostat-ic" style="background:var(--bluel)">📋</div><div><div class="ostat-v">4</div><div class="ostat-l">طلبيات مفتوحة</div></div></div>
+        <div class="ostat"><div class="ostat-ic" style="background:var(--amberl)">⏳</div><div><div class="ostat-v">23</div><div class="ostat-l">عرض وارد</div></div></div>
+        <div class="ostat"><div class="ostat-ic" style="background:var(--greenl)">✅</div><div><div class="ostat-v">18</div><div class="ostat-l">صفقة مكتملة</div></div></div>
+        <div class="ostat"><div class="ostat-ic" style="background:var(--teall)">💰</div><div><div class="ostat-v">2%</div><div class="ostat-l">عمولة ميدفلو</div></div></div>
+      </div>
+
+      <!-- ORDER CARD 1 -->
+      <div class="order-card">
+        <div class="oc-head" onclick="toggleOrder(this)">
+          <div class="oc-info">
+            <div class="oc-id">PO-3041 · منذ 3 ساعات</div>
+            <div class="oc-name">طلبية صيدلية الشفاء — الرياض</div>
+            <div class="oc-meta">32 بند · عروض واردة: <strong style="color:var(--teal2)">5 موردين</strong></div>
+          </div>
+          <div class="oc-stats">
+            <div class="oc-bnd"><div class="oc-bnd-v">32</div><div class="oc-bnd-l">بند</div></div>
+            <div class="oc-bnd"><div class="oc-bnd-v" style="color:var(--green)">5</div><div class="oc-bnd-l">عرض</div></div>
+            <span class="b bg">مفتوح</span>
+          </div>
+          <div class="oc-chevron">⌄</div>
+        </div>
+        <div class="oc-body">
+          <div class="bids-summary">
+            <div class="bs-card"><div class="bs-v">5</div><div class="bs-l">موردون قدموا عرضاً</div></div>
+            <div class="bs-card"><div class="bs-v" style="color:var(--green)">189,400 ﷼</div><div class="bs-l">أفضل عرض إجمالي</div></div>
+            <div class="bs-card"><div class="bs-v" style="color:var(--amber)">3,788 ﷼</div><div class="bs-l">عمولة ميدفلو (2%)</div></div>
+          </div>
+
+          <!-- COMPARISON TABLE -->
+          <div style="font-size:11px;color:var(--ink3);margin-bottom:8px;font-weight:600">🏆 مقارنة عروض الموردين بند بند — الأخضر = الأفضل سعراً</div>
+          <div class="bids-table-wrap">
+            <table class="bids-table">
+              <thead>
+                <tr>
+                  <th style="width:28px">#</th>
+                  <th>البند</th>
+                  <th style="text-align:center">الكمية</th>
+                  <th class="supplier-col" style="text-align:center">
+                    <div class="sup-hd" style="justify-content:center">
+                      <div class="sup-av" style="background:var(--teal)">مك</div>
+                      <div><div class="sup-name" style="color:#fff">مستودع ميدفلو</div><div class="sup-rating">4.9 ⭐</div></div>
+                    </div>
+                  </th>
+                  <th style="text-align:center">
+                    <div class="sup-hd" style="justify-content:center">
+                      <div class="sup-av" style="background:var(--blue)">أم</div>
+                      <div><div class="sup-name">مستودع الأمانة</div><div class="sup-rating">4.7 ⭐</div></div>
+                    </div>
+                  </th>
+                  <th style="text-align:center">
+                    <div class="sup-hd" style="justify-content:center">
+                      <div class="sup-av" style="background:var(--purple)">مر</div>
+                      <div><div class="sup-name">الموزع المركزي</div><div class="sup-rating">4.5 ⭐</div></div>
+                    </div>
+                  </th>
+                  <th style="text-align:center">
+                    <div class="sup-hd" style="justify-content:center">
+                      <div class="sup-av" style="background:var(--green)">صح</div>
+                      <div><div class="sup-name">مستودع الصحة</div><div class="sup-rating">4.8 ⭐</div></div>
+                    </div>
+                  </th>
+                  <th style="text-align:center">
+                    <div class="sup-hd" style="justify-content:center">
+                      <div class="sup-av" style="background:var(--amber)">ند</div>
+                      <div><div class="sup-name">الندى الطبي</div><div class="sup-rating">4.6 ⭐</div></div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="row-num">1</td>
+                  <td><div class="item-name">💊 باراسيتامول 500mg</div></td>
+                  <td class="item-qty" style="text-align:center">200 علبة</td>
+                  <td class="price-cell"><span class="price-best">38 ﷼</span></td>
+                  <td class="price-cell">39.5 ﷼</td>
+                  <td class="price-cell">40 ﷼</td>
+                  <td class="price-cell">39 ﷼</td>
+                  <td class="price-na">—</td>
+                </tr>
+                <tr>
+                  <td class="row-num">2</td>
+                  <td><div class="item-name">🧤 قفازات لاتكس M</div></td>
+                  <td class="item-qty" style="text-align:center">50 علبة</td>
+                  <td class="price-cell">230 ﷼</td>
+                  <td class="price-cell"><span class="price-best">225 ﷼</span></td>
+                  <td class="price-cell">235 ﷼</td>
+                  <td class="price-cell">228 ﷼</td>
+                  <td class="price-cell">232 ﷼</td>
+                </tr>
+                <tr>
+                  <td class="row-num">3</td>
+                  <td><div class="item-name">🐟 أوميغا 3</div></td>
+                  <td class="item-qty" style="text-align:center">100 علبة</td>
+                  <td class="price-cell"><span class="price-best">128 ﷼</span></td>
+                  <td class="price-cell">130 ﷼</td>
+                  <td class="price-na">—</td>
+                  <td class="price-cell">131 ﷼</td>
+                  <td class="price-cell">129 ﷼</td>
+                </tr>
+                <tr>
+                  <td class="row-num">4</td>
+                  <td><div class="item-name">☀️ فيتامين D3</div></td>
+                  <td class="item-qty" style="text-align:center">80 علبة</td>
+                  <td class="price-cell">82 ﷼</td>
+                  <td class="price-cell">83 ﷼</td>
+                  <td class="price-cell"><span class="price-best">80 ﷼</span></td>
+                  <td class="price-na">—</td>
+                  <td class="price-cell">81 ﷼</td>
+                </tr>
+                <tr>
+                  <td class="row-num">5</td>
+                  <td><div class="item-name">🩹 ضمادات 10×15</div></td>
+                  <td class="item-qty" style="text-align:center">500 حزمة</td>
+                  <td class="price-cell">72 ﷼</td>
+                  <td class="price-cell">74 ﷼</td>
+                  <td class="price-cell">73 ﷼</td>
+                  <td class="price-cell"><span class="price-best">70 ﷼</span></td>
+                  <td class="price-cell">71 ﷼</td>
+                </tr>
+                <tr>
+                  <td class="row-num" style="color:var(--ink3)">…</td>
+                  <td colspan="7" style="color:var(--ink3);font-size:10px;text-align:center;padding:10px">27 بند إضافي — اضغط "عرض كامل" لرؤية جميع البنود</td>
+                </tr>
+                <tr class="total-row">
+                  <td colspan="2" style="font-weight:800;color:var(--navy)">الإجمالي الكلي</td>
+                  <td style="text-align:center;color:var(--ink3)">32 بند</td>
+                  <td style="text-align:center;color:var(--green);font-weight:900">189,400 ﷼</td>
+                  <td style="text-align:center;font-weight:800">194,200 ﷼</td>
+                  <td style="text-align:center;font-weight:800">191,800 ﷼</td>
+                  <td style="text-align:center;font-weight:800">193,600 ﷼</td>
+                  <td style="text-align:center;font-weight:800">196,100 ﷼</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="select-row">
+            <div class="select-info">💡 تقدر تختار مورد واحد لكل الطلبية، أو توزع البنود على أكثر من مورد</div>
+            <div class="select-actions">
+              <button class="btn btn-out btn-sm" onclick="showToast('جارٍ فتح مقارنة تفصيلية...')">🔍 مقارنة كاملة</button>
+              <button class="btn btn-green btn-sm" onclick="openAcceptModal()">✅ قبول مستودع ميدفلو — 189,400 ﷼</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDER CARD 2 -->
+      <div class="order-card">
+        <div class="oc-head" onclick="toggleOrder(this)">
+          <div class="oc-info">
+            <div class="oc-id">PO-3038 · منذ 6 ساعات</div>
+            <div class="oc-name">طلبية مستشفى الأمل الخاص</div>
+            <div class="oc-meta">18 بند · عروض واردة: <strong style="color:var(--teal2)">3 موردين</strong></div>
+          </div>
+          <div class="oc-stats">
+            <div class="oc-bnd"><div class="oc-bnd-v">18</div><div class="oc-bnd-l">بند</div></div>
+            <div class="oc-bnd"><div class="oc-bnd-v" style="color:var(--green)">3</div><div class="oc-bnd-l">عرض</div></div>
+            <span class="b bg">مفتوح</span>
+          </div>
+          <div class="oc-chevron">⌄</div>
+        </div>
+        <div class="oc-body">
+          <div style="text-align:center;padding:20px;color:var(--ink3);font-size:12px">اضغط "عرض كامل" لرؤية جدول المقارنة كاملاً</div>
+          <div style="display:flex;justify-content:center">
+            <button class="btn btn-teal btn-sm" onclick="showToast('فتح مقارنة PO-3038')">📊 عرض مقارنة الموردين</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDER CARD 3 — ESCROW ACTIVE -->
+      <div class="order-card">
+        <div class="oc-head" onclick="toggleOrder(this)">
+          <div class="oc-info">
+            <div class="oc-id">PO-3035 · تم قبول العرض</div>
+            <div class="oc-name">طلبية عيادة النور — جدة</div>
+            <div class="oc-meta">25 بند · مورد: مستودع الصحة · <strong style="color:var(--amber)">Escrow نشط ⏳</strong></div>
+          </div>
+          <div class="oc-stats">
+            <div class="oc-bnd"><div class="oc-bnd-v">25</div><div class="oc-bnd-l">بند</div></div>
+            <div class="oc-bnd"><div class="oc-bnd-v" style="color:var(--amber)">142K</div><div class="oc-bnd-l">محجوز ﷼</div></div>
+            <span class="b ba">Escrow</span>
+          </div>
+          <div class="oc-chevron">⌄</div>
+        </div>
+        <div class="oc-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+            <div style="background:var(--amberl);border-radius:10px;padding:12px">
+              <div style="font-size:11px;font-weight:800;color:var(--amber);margin-bottom:6px">⏳ المبلغ محجوز في Escrow</div>
+              <div style="font-size:20px;font-weight:900;color:var(--navy)">142,000 ﷼</div>
+              <div style="font-size:10px;color:var(--ink3);margin-top:3px">ينتظر تأكيد الاستلام</div>
+            </div>
+            <div style="background:var(--greenl);border-radius:10px;padding:12px">
+              <div style="font-size:11px;font-weight:800;color:var(--green);margin-bottom:6px">✅ المورد قيد التجهيز</div>
+              <div style="font-size:13px;font-weight:800;color:var(--navy)">مستودع الصحة</div>
+              <div style="font-size:10px;color:var(--ink3);margin-top:3px">التسليم المتوقع: غداً</div>
+            </div>
+          </div>
+          <button class="btn btn-green" style="width:100%;justify-content:center" onclick="openConfirmModal()">📦 تأكيد الاستلام وتحرير المبلغ</button>
+        </div>
+      </div>
+
+      <!-- ORDER CARD 4 — COMPLETED -->
+      <div class="order-card">
+        <div class="oc-head" onclick="toggleOrder(this)">
+          <div class="oc-info">
+            <div class="oc-id">PO-3029 · مكتمل</div>
+            <div class="oc-name">طلبية صيدلية الرعاية — مكة</div>
+            <div class="oc-meta">40 بند · 215,600 ﷼ · عمولة ميدفلو: 4,312 ﷼</div>
+          </div>
+          <div class="oc-stats">
+            <div class="oc-bnd"><div class="oc-bnd-v">40</div><div class="oc-bnd-l">بند</div></div>
+            <div class="oc-bnd"><div class="oc-bnd-v" style="color:var(--green)">✓</div><div class="oc-bnd-l">مكتمل</div></div>
+            <span class="b bg">مكتمل</span>
+          </div>
+          <div class="oc-chevron">⌄</div>
+        </div>
+        <div class="oc-body">
+          <div style="text-align:center;padding:16px;color:var(--green);font-size:13px;font-weight:700">✅ تمت الصفقة بنجاح — المبلغ محرَّر للمورد</div>
+          <button class="btn btn-out btn-sm" style="display:block;margin:0 auto" onclick="showToast('تنزيل فاتورة PO-3029')">📄 تنزيل الفاتورة</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VIEW: INCOMING ══ -->
+    <div id="view-incoming" style="display:none">
+      <div style="font-size:11px;color:var(--ink3);margin-bottom:14px">7 طلبيات واردة تنتظر عرض سعرك · قدم عرضك على البنود التي تغطيها</div>
+
+      <div class="incoming-card" onclick="openOfferModal(1)">
+        <div class="ic-top">
+          <div class="ic-av" style="background:var(--green)">شف</div>
+          <div class="ic-info">
+            <div class="ic-id">PO-3041 · منذ 3 ساعات</div>
+            <div class="ic-requester">صيدلية الشفاء</div>
+            <div class="ic-city">📍 الرياض</div>
+          </div>
+          <div>
+            <div class="ic-deadline" style="background:var(--amberl);color:var(--amber)">ينتهي خلال 21 ساعة</div>
+            <div style="font-size:11px;font-weight:800;color:var(--navy);text-align:center;margin-top:6px">32 بند</div>
+          </div>
+        </div>
+        <div class="ic-items">
+          <span class="ic-item">💊 باراسيتامول ×200</span>
+          <span class="ic-item">🧤 قفازات ×50</span>
+          <span class="ic-item">🐟 أوميغا 3 ×100</span>
+          <span class="ic-item">☀️ فيتامين D ×80</span>
+          <span class="ic-item">🩹 ضمادات ×500</span>
+          <span class="ic-item-more">+27 بند أخرى</span>
+        </div>
+        <div class="ic-footer">
+          <div class="ic-coverage">البنود: <span>32 بند</span></div>
+          <button class="btn btn-teal btn-sm" onclick="toggleWHS(1)">💰 قدم عرضك</button>
+        </div>
+        <!-- WAREHOUSE SELECTOR -->
+        <div class="wh-selector" id="whs-1" style="display:none;margin-top:12px;border-top:1px solid var(--paper3);padding-top:12px">
+          <div style="font-size:11px;font-weight:800;color:var(--navy);margin-bottom:8px">اختر المستودع المورد لهذه الطلبية:</div>
+          <div style="display:flex;flex-direction:column;gap:6px" id="whList-1"></div>
+        </div>
+      </div>
+
+      <div class="incoming-card">
+        <div class="ic-top">
+          <div class="ic-av" style="background:var(--blue)">أمل</div>
+          <div class="ic-info">
+            <div class="ic-id">PO-3040 · منذ 5 ساعات</div>
+            <div class="ic-requester">مستشفى الأمل الخاص</div>
+            <div class="ic-city">📍 جدة</div>
+          </div>
+          <div>
+            <div class="ic-deadline" style="background:var(--redl);color:var(--red)">⚡ ينتهي خلال 3 ساعات</div>
+            <div style="font-size:11px;font-weight:800;color:var(--navy);text-align:center;margin-top:6px">18 بند</div>
+          </div>
+        </div>
+        <div class="ic-items">
+          <span class="ic-item">💉 محاقن ×1000</span>
+          <span class="ic-item">🧤 قفازات جراحية ×200</span>
+          <span class="ic-item">🩺 ضغط رقمي ×10</span>
+          <span class="ic-item-more">+15 بند أخرى</span>
+        </div>
+        <div class="ic-footer">
+          <div class="ic-coverage">البنود: <span>18 بند</span></div>
+          <button class="btn btn-teal btn-sm" onclick="toggleWHS(2)">💰 قدم عرضك</button>
+        </div>
+        <div class="wh-selector" id="whs-2" style="display:none;margin-top:12px;border-top:1px solid var(--paper3);padding-top:12px">
+          <div style="font-size:11px;font-weight:800;color:var(--navy);margin-bottom:8px">اختر المستودع المورد لهذه الطلبية:</div>
+          <div style="display:flex;flex-direction:column;gap:6px" id="whList-2"></div>
+        </div>
+      </div>
+
+      <div class="incoming-card">
+        <div class="ic-top">
+          <div class="ic-av" style="background:var(--purple)">نور</div>
+          <div class="ic-info">
+            <div class="ic-id">PO-3039 · منذ 8 ساعات</div>
+            <div class="ic-requester">عيادة النور التخصصية</div>
+            <div class="ic-city">📍 مكة المكرمة</div>
+          </div>
+          <div>
+            <div class="ic-deadline" style="background:var(--greenl);color:var(--green)">ينتهي خلال 16 ساعة</div>
+            <div style="font-size:11px;font-weight:800;color:var(--navy);text-align:center;margin-top:6px">22 بند</div>
+          </div>
+        </div>
+        <div class="ic-items">
+          <span class="ic-item">✨ سيروم فيتامين C ×100</span>
+          <span class="ic-item">🌿 هيالورونيك ×50</span>
+          <span class="ic-item">🌞 واقي شمس SPF50 ×80</span>
+          <span class="ic-item-more">+19 بند أخرى</span>
+        </div>
+        <div class="ic-footer">
+          <div class="ic-coverage">البنود: <span>22 بند</span></div>
+          <button class="btn btn-teal btn-sm" onclick="toggleWHS(3)">💰 قدم عرضك</button>
+        </div>
+        <div class="wh-selector" id="whs-3" style="display:none;margin-top:12px;border-top:1px solid var(--paper3);padding-top:12px">
+          <div style="font-size:11px;font-weight:800;color:var(--navy);margin-bottom:8px">اختر المستودع المورد لهذه الطلبية:</div>
+          <div style="display:flex;flex-direction:column;gap:6px" id="whList-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VIEW: NEW ORDER ══ -->
+    <div id="view-neworder" style="display:none">
+      <div class="new-order-wrap">
+
+        <div class="form-section">
+          <div class="form-sec-title">📋 بيانات الطلبية</div>
+          <div class="fi-row">
+            <div class="fi"><label class="fl">اسم مؤسستك / مستودعك</label><input type="text" placeholder="صيدلية، عيادة، مستودع..."></div>
+            <div class="fi"><label class="fl">المدينة</label><select><option>مكة المكرمة</option><option>الرياض</option><option>جدة</option><option>الدمام</option><option>المدينة المنورة</option></select></div>
+          </div>
+          <div class="fi-row">
+            <div class="fi"><label class="fl">تاريخ الاستلام المطلوب</label><input type="date"></div>
+            <div class="fi"><label class="fl">مدة استقبال العروض</label><select><option>24 ساعة</option><option>48 ساعة</option><option>72 ساعة</option></select></div>
+          </div>
+          <div class="fi"><label class="fl">ملاحظات عامة للموردين (اختياري)</label><input type="text" placeholder="مثال: يشترط صلاحية لا تقل عن سنة، توصيل للمستودع الرئيسي..."></div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-sec-title">📦 بنود الطلبية <span style="background:var(--teall);color:var(--teal2);font-size:10px;border-radius:6px;padding:2px 9px;font-weight:700" id="itemCount">0 بند</span></div>
+
+          <div class="items-table-wrap">
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th style="width:36px;text-align:center">#</th>
+                  <th>اسم البند</th>
+                  <th style="width:100px;text-align:center">الكمية</th>
+                  <th style="width:30px"></th>
+                </tr>
+              </thead>
+              <tbody id="itemsBody"></tbody>
+            </table>
+          </div>
+          <button class="add-row-btn" onclick="addItem()">+ إضافة بند جديد</button>
+        </div>
+
+        <div class="order-summary" id="orderSummary" style="display:none">
+          <div class="os-title">📊 ملخص الطلبية</div>
+          <div class="os-row"><span style="color:var(--ink3)">عدد البنود</span><span id="sumItems" style="font-weight:700;color:var(--navy)">—</span></div>
+          <div class="os-row"><span style="color:var(--ink3)">الكميات الإجمالية</span><span id="sumQty" style="font-weight:700;color:var(--teal2)">—</span></div>
+          <div class="os-row"><span style="color:var(--ink3)">عمولة ميدفلو</span><span style="color:var(--ink3)">2% من قيمة الصفقة عند الإتمام</span></div>
+          <div class="os-row"><span>ستُرسل الطلبية لـ</span><span style="color:var(--teal2);font-weight:800">جميع الموردين المسجلين</span></div>
+        </div>
+
+        <div class="escrow-badge">
+          <div style="font-size:22px">🔒</div>
+          <div class="eb-text"><strong>الدفع بنظام Escrow الآمن:</strong> المبلغ يُحجز في ميدفلو بعد قبول العرض — لا يُحرَّر للمورد إلا بعد تأكيد استلامك ورفع فاتورة التسليم الموثقة بـ GLN.</div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px">
+          <button class="btn btn-out" onclick="switchView('myorders')">إلغاء</button>
+          <button class="btn btn-out btn-sm" onclick="showToast('تم حفظ كمسودة ✓')">💾 حفظ مسودة</button>
+          <button class="btn btn-teal" onclick="publishOrder()">🚀 نشر الطلبية للموردين</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- MODAL: قبول عرض + Escrow -->
+<div class="modal-ov" id="acceptModal">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-ic" style="background:var(--greenl)">✅</div>
+      <span class="modal-title">قبول العرض وتفعيل Escrow</span>
+      <div class="modal-close" onclick="closeModal('acceptModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--paper2);border-radius:10px;padding:13px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:800;color:var(--navy);margin-bottom:6px">مستودع ميدفلو — مكة المكرمة</div>
+        <div style="display:flex;gap:16px;font-size:11px;color:var(--ink3)">
+          <span>⭐ تقييم 4.9</span>
+          <span>🚚 توصيل خلال 24 ساعة</span>
+          <span>✓ موثق SFDA</span>
+        </div>
+      </div>
+      <div style="background:var(--teall);border:1.5px solid var(--tealm);border-radius:12px;padding:14px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:800;color:var(--navy);margin-bottom:10px">🔒 تفاصيل Escrow</div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--tealm)"><span style="color:var(--ink3)">قيمة الطلبية (32 بند)</span><span style="font-weight:800;color:var(--navy)">189,400 ﷼</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--tealm)"><span style="color:var(--ink3)">عمولة ميدفلو (2%)</span><span style="font-weight:700;color:var(--red)">3,788 ﷼</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:900;padding:10px 0 0;border-top:1px solid var(--tealm);margin-top:5px"><span>إجمالي يُحجز</span><span style="color:var(--navy)">193,188 ﷼</span></div>
+        <div style="font-size:10px;color:var(--tealtext);margin-top:8px;line-height:1.6">💡 المبلغ يُحجز فوراً — لا يُحرَّر للمورد إلا بعد تأكيد استلامك ورفع فاتورة التسليم</div>
+      </div>
+      <div style="font-size:11px;color:var(--ink3);line-height:1.7">بالضغط على "تأكيد القبول" توافق على شروط الصفقة وتفوّض ميدفلو باحتجاز المبلغ كضمان حتى إتمام التسليم.</div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-out" onclick="closeModal('acceptModal')">إلغاء</button>
+      <button class="btn btn-green" onclick="closeModal('acceptModal');showToast('✅ تم قبول العرض — Escrow نشط!')">🔒 تأكيد القبول وتفعيل Escrow</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: تأكيد الاستلام -->
+<div class="modal-ov" id="confirmModal">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-ic" style="background:var(--greenl)">📦</div>
+      <span class="modal-title">تأكيد الاستلام وتحرير المبلغ</span>
+      <div class="modal-close" onclick="closeModal('confirmModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--amberl);border:1px solid var(--amberm);border-radius:10px;padding:12px;margin-bottom:14px;font-size:11px;color:var(--amber);line-height:1.7">
+        ⚠️ تأكد من فحص البضاعة قبل التأكيد — بعد التأكيد يُحرَّر المبلغ للمورد فوراً ولا يمكن التراجع.
+      </div>
+      <div style="background:var(--teall);border:1.5px solid var(--tealm);border-radius:12px;padding:14px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px">💰 المبلغ المحجوز — PO-3035</div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--tealm)"><span style="color:var(--ink3)">قيمة الطلبية</span><span style="font-weight:800">142,000 ﷼</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--tealm)"><span style="color:var(--ink3)">عمولة ميدفلو (2%)</span><span style="color:var(--red);font-weight:700">2,840 ﷼</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:900;padding:10px 0 0;margin-top:5px"><span>سيُحرَّر للمورد</span><span style="color:var(--green)">139,160 ﷼</span></div>
+      </div>
+      <div class="fi"><label class="fl">ارفع فاتورة التسليم (PDF أو صورة) — إلزامي</label><input type="file" accept=".pdf,image/*" style="padding:6px"><span class="fh">تُحفظ كوثيقة رسمية موثقة بـ GLN</span></div>
+      <div class="fi"><label class="fl">ملاحظات الاستلام</label><input type="text" placeholder="البضاعة وصلت سليمة..."></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-out" onclick="closeModal('confirmModal')">إلغاء</button>
+      <button class="btn btn-red btn-sm" onclick="closeModal('confirmModal');showToast('⚠️ تم رفع النزاع — ميدفلو ستتواصل خلال 48 ساعة')">⚠️ رفع نزاع</button>
+      <button class="btn btn-green" onclick="closeModal('confirmModal');showToast('✅ تم تأكيد الاستلام — المبلغ محرَّر!')">✅ تأكيد الاستلام</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: تقديم عرض -->
+<div class="modal-ov" id="offerModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-hd">
+      <div class="modal-ic" style="background:var(--teall)">💰</div>
+      <span class="modal-title" id="offerModalTitle">تقديم عرض سعر</span>
+      <div class="modal-close" onclick="closeModal('offerModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:11px;color:var(--ink3);margin-bottom:12px;line-height:1.7">
+        أدخل سعرك لكل بند تستطيع توفيره — البنود التي لا تغطيها اتركها فارغة أو ضع ✗
+      </div>
+      <div id="offerItemsList"></div>
+      <div style="background:var(--teall);border:1px solid var(--tealm);border-radius:10px;padding:12px;font-size:11px;color:var(--tealtext);line-height:1.7;margin-top:8px">
+        🔒 <strong>إذا قُبل عرضك:</strong> المبلغ يُحجز في Escrow ميدفلو — تستلمه بعد تأكيد المشتري للاستلام ورفع الفاتورة. عمولة ميدفلو 2% فقط.
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-out" onclick="closeModal('offerModal')">إلغاء</button>
+      <button class="btn btn-teal" onclick="submitOffer()">📤 إرسال عرضي للمشتري</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── VIEW SWITCH ──
+const views = ['myorders','incoming','neworder'];
+function switchView(v) {
+  views.forEach(x => { document.getElementById('view-'+x).style.display = x===v?'block':'none'; });
+  const titles = {myorders:'طلبياتي',incoming:'الطلبيات الواردة',neworder:'طلبية جديدة'};
+  document.getElementById('topbarTitle').textContent = titles[v];
+  if(v==='neworder' && document.getElementById('itemsBody').children.length===0) {
+    addItem(); addItem(); addItem();
+  }
+}
+
+// ── TOGGLE ORDER ──
+function toggleOrder(el) {
+  const body = el.nextElementSibling;
+  const chevron = el.querySelector('.oc-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+// ── ITEMS TABLE ──
+let itemCounter = 0;
+function addItem() {
+  itemCounter++;
+  const tbody = document.getElementById('itemsBody');
+  const tr = document.createElement('tr');
+  tr.id = 'item-' + itemCounter;
+  tr.innerHTML = `
+    <td class="row-num" style="text-align:center">${tbody.children.length+1}</td>
+    <td><input type="text" placeholder="مثال: باراسيتامول 500mg"></td>
+    <td><input type="number" placeholder="0" min="1" style="text-align:center" oninput="updateSummary()"></td>
+    <td><button class="del-btn" onclick="removeItem('item-${itemCounter}')">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+  updateRowNumbers();
+  updateSummary();
+}
+
+function removeItem(id) {
+  document.getElementById(id)?.remove();
+  updateRowNumbers();
+  updateSummary();
+}
+
+function updateRowNumbers() {
+  document.querySelectorAll('#itemsBody tr').forEach((tr,i) => {
+    tr.querySelector('.row-num').textContent = i+1;
+  });
+}
+
+function updateSummary() {
+  const rows = document.querySelectorAll('#itemsBody tr');
+  const count = rows.length;
+  let totalQty = 0;
+  rows.forEach(r => {
+    const q = parseInt(r.querySelectorAll('input')[1]?.value) || 0;
+    totalQty += q;
+  });
+  document.getElementById('itemCount').textContent = count + ' بند';
+  const summary = document.getElementById('orderSummary');
+  if(count > 0) {
+    summary.style.display = 'block';
+    document.getElementById('sumItems').textContent = count + ' بند';
+    document.getElementById('sumQty').textContent = totalQty > 0 ? totalQty.toLocaleString() + ' وحدة إجمالية' : '—';
+  } else {
+    summary.style.display = 'none';
+  }
+}
+
+// ── PUBLISH ORDER ──
+function publishOrder() {
+  const rows = document.querySelectorAll('#itemsBody tr');
+  if(rows.length === 0) { showToast('⚠️ أضف بنداً واحداً على الأقل'); return; }
+  const hasName = Array.from(rows).some(r => r.querySelectorAll('input')[0]?.value.trim());
+  if(!hasName) { showToast('⚠️ أدخل اسم منتج في بند واحد على الأقل'); return; }
+  closeAllModals();
+  showToast('🚀 تم نشر طلبيتك — الموردون سيشاهدونها الآن');
+  setTimeout(() => switchView('myorders'), 1000);
+}
+
+// ── OFFER MODAL ──
+// WAREHOUSES DATA
+const warehouses = [
+  {id:1, name:'مستودع ميدفلو — مكة', av:'مك', color:'#00B5A6', rating:'4.9 ⭐', delivery:'24 ساعة', price:'الأفضل سعراً'},
+  {id:2, name:'مستودع الأمانة — الرياض', av:'أم', color:'#2563EB', rating:'4.7 ⭐', delivery:'48 ساعة', price:''},
+  {id:3, name:'الموزع المركزي — جدة', av:'مر', color:'#7C3AED', rating:'4.5 ⭐', delivery:'72 ساعة', price:''},
+  {id:4, name:'مستودع الصحة — الدمام', av:'صح', color:'#059669', rating:'4.8 ⭐', delivery:'48 ساعة', price:''},
+  {id:5, name:'الندى الطبي — المدينة', av:'ند', color:'#D97706', rating:'4.6 ⭐', delivery:'72 ساعة', price:''},
+];
+
+let selectedWH = {}; // {poId: whId}
+
+// بيانات عروض الأسعار لكل طلبية
+const poOffers = {
+  1: {
+    items: [
+      {name:'💊 باراسيتامول 500mg', qty:200, unit:'علبة', prices:[38,39.5,40,39,null]},
+      {name:'🧤 قفازات لاتكس M',    qty:50,  unit:'علبة', prices:[230,225,235,228,232]},
+      {name:'🐟 أوميغا 3',          qty:100, unit:'علبة', prices:[128,130,null,131,129]},
+      {name:'☀️ فيتامين D3',        qty:80,  unit:'علبة', prices:[82,83,80,null,81]},
+      {name:'🩹 ضمادات 10×15',      qty:500, unit:'حزمة', prices:[72,74,73,70,71]},
+    ],
+    totals: [189400, 194200, 191800, 193600, 196100]
+  },
+  2: {
+    items: [
+      {name:'💉 محقنة 5ml',          qty:1000, unit:'قطعة', prices:[14,15,null,14.5,15]},
+      {name:'🧤 قفازات جراحية',      qty:200,  unit:'علبة', prices:[310,305,320,null,315]},
+      {name:'🩺 ضغط رقمي',           qty:10,   unit:'قطعة', prices:[180,null,185,175,182]},
+    ],
+    totals: [87400,91000,null,89500,92100]
+  },
+  3: {
+    items: [
+      {name:'✨ سيروم فيتامين C',    qty:100, unit:'قطعة', prices:[295,null,300,298,305]},
+      {name:'🌿 هيالورونيك أسيد',   qty:50,  unit:'قطعة', prices:[410,420,null,415,408]},
+      {name:'🌞 واقي شمس SPF50',    qty:80,  unit:'قطعة', prices:[240,245,238,null,242]},
+    ],
+    totals: [128500,null,132000,130400,134200]
+  }
+};
+
+function renderWHList(poId) {
+  const container = document.getElementById('whList-' + poId);
+  if (!container) return;
+  const data = poOffers[poId];
+  if (!data) return;
+  const whs = warehouses;
+
+  // حساب أفضل سعر لكل بند
+  const bestPrices = data.items.map(item =>
+    Math.min(...item.prices.filter(p => p !== null))
+  );
+  const bestTotal = Math.min(...data.totals.filter(t => t !== null));
+
+  container.innerHTML = `
+    <div style="overflow-x:auto;border-radius:10px;border:1px solid var(--border)">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:580px">
+        <thead>
+          <tr>
+            <th style="background:var(--paper2);padding:9px 12px;text-align:right;font-size:10px;font-weight:800;color:var(--navy);border-bottom:1px solid var(--border);white-space:nowrap">البند</th>
+            <th style="background:var(--paper2);padding:9px 8px;text-align:center;font-size:10px;color:var(--ink3);border-bottom:1px solid var(--border)">الكمية</th>
+            ${whs.map(wh => `
+              <th style="background:var(--navy2);padding:8px;border-bottom:1px solid var(--border);text-align:center;min-width:90px">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+                  <div style="width:22px;height:22px;border-radius:6px;background:${wh.color};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff">${wh.av}</div>
+                  <div style="font-size:9px;color:#fff;font-weight:700;white-space:nowrap">${wh.name.split('—')[0].trim()}</div>
+                  <div style="font-size:9px;color:rgba(255,255,255,.4)">${wh.rating.split(' ')[0]} ⭐ · ${wh.delivery}</div>
+                </div>
+              </th>
+            `).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${data.items.map((item, i) => `
+            <tr style="border-bottom:1px solid var(--paper2)">
+              <td style="padding:9px 12px;font-weight:700;color:var(--navy);white-space:nowrap">${item.name}</td>
+              <td style="padding:9px 8px;text-align:center;color:var(--ink3)">${item.qty} ${item.unit}</td>
+              ${item.prices.map((p,wi) => {
+                const isBest = p !== null && p === bestPrices[i];
+                return `<td style="padding:9px 8px;text-align:center">
+                  ${p !== null
+                    ? `<span style="${isBest?'background:var(--greenl);color:var(--green);':'color:var(--navy);'}font-weight:800;border-radius:6px;padding:2px 8px;display:inline-block">${p} ﷼</span>`
+                    : `<span style="color:var(--ink3)">—</span>`
+                  }
+                </td>`;
+              }).join('')}
+            </tr>
+          `).join('')}
+          <!-- TOTAL ROW -->
+          <tr style="background:var(--teall);border-top:2px solid var(--tealm)">
+            <td colspan="2" style="padding:10px 12px;font-weight:800;color:var(--navy);font-size:12px">الإجمالي الكلي</td>
+            ${data.totals.map((t,wi) => {
+              const isBest = t !== null && t === bestTotal;
+              return `<td style="padding:10px 8px;text-align:center">
+                ${t !== null
+                  ? `<div style="${isBest?'color:var(--green);':'color:var(--navy);'}font-weight:900;font-size:13px">${t.toLocaleString()} ﷼${isBest?'<div style="font-size:9px;color:var(--green);font-weight:800">🏆 الأفضل</div>':''}</div>`
+                  : `<span style="color:var(--ink3);font-size:11px">غير مكتمل</span>`
+                }
+              </td>`;
+            }).join('')}
+          </tr>
+          <!-- SELECT ROW -->
+          <tr style="background:var(--white)">
+            <td colspan="2" style="padding:10px 12px;font-size:10px;color:var(--ink3);font-weight:700">اختر المستودع</td>
+            ${whs.map((wh,wi) => `
+              <td style="padding:8px;text-align:center">
+                <button
+                  id="selBtn_${poId}_${wh.id}"
+                  class="btn btn-sm ${selectedWH[poId]===wh.id?'btn-teal':'btn-out'}"
+                  onclick="selectWH(${poId},${wh.id})"
+                  ${data.totals[wi]===null?'disabled style="opacity:.4;cursor:not-allowed"':''}
+                >
+                  ${selectedWH[poId]===wh.id?'✓ محدد':'اختر'}
+                </button>
+              </td>
+            `).join('')}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    ${selectedWH[poId] ? `
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <button class="btn btn-green btn-sm" onclick="confirmWHSelection(${poId})">
+          ✅ تأكيد — ${warehouses.find(w=>w.id===selectedWH[poId])?.name}
+        </button>
+      </div>
+    ` : ''}
+  `;
+}
+
+function selectWH(poId, whId) {
+  selectedWH[poId] = whId;
+  renderWHList(poId);
+}
+
+function confirmWHSelection(poId) {
+  const wh = warehouses.find(w => w.id === selectedWH[poId]);
+  document.getElementById('whs-' + poId).style.display = 'none';
+  showToast('✅ تم اختيار ' + wh.name + ' — سيتم تفعيل Escrow');
+}
+
+// OFFER MODAL
+const sampleItems = [
+  ['💊 باراسيتامول 500mg','200 علبة'],
+  ['🧤 قفازات لاتكس M','50 علبة'],
+  ['🐟 أوميغا 3 60 كبسولة','100 علبة'],
+  ['☀️ فيتامين D3 1000IU','80 علبة'],
+  ['🩹 ضمادات معقمة 10×15','500 حزمة'],
+  ['💉 محقنة 5ml','200 قطعة'],
+  ['🌡️ ميزان حرارة رقمي','20 قطعة'],
+];
+
+function openOfferModal(n) {
+  const names = ['','صيدلية الشفاء — PO-3041','مستشفى الأمل — PO-3040','عيادة النور — PO-3039'];
+  document.getElementById('offerModalTitle').textContent = 'اختر المستودع المورد: ' + names[n];
+  const list = document.getElementById('offerItemsList');
+  // Show WH selector inside modal too
+  list.innerHTML = `
+    <div style="font-size:11px;color:var(--ink3);margin-bottom:10px">اختر المستودع الذي ستورد منه هذه الطلبية:</div>
+    ${warehouses.map(wh => `
+      <div class="wh-option" id="mwh_${wh.id}" onclick="selectModalWH(${wh.id})">
+        <div class="wh-left">
+          <div class="wh-av" style="background:${wh.color}">${wh.av}</div>
+          <div>
+            <div class="wh-name">${wh.name} ${wh.price?'<span style="background:var(--greenl);color:var(--green);font-size:9px;border-radius:4px;padding:1px 6px;font-weight:800">'+wh.price+'</span>':''}</div>
+            <div class="wh-meta">${wh.rating} · توصيل ${wh.delivery}</div>
+          </div>
+        </div>
+        <div class="wh-check" id="mwhck_${wh.id}"></div>
+      </div>
+    `).join('')}
+    <div style="font-size:10px;color:var(--ink3);margin-top:12px;line-height:1.7;background:var(--teall);border-radius:8px;padding:10px">
+      🔒 بعد اختيار المستودع واعتماد الطلبية — يُحجز المبلغ في Escrow ميدفلو ولا يُحرَّر إلا بعد تأكيد التسليم.
+    </div>
+  `;
+  document.getElementById('offerModal').classList.add('open');
+}
+
+let selectedModalWH = null;
+function selectModalWH(id) {
+  selectedModalWH = id;
+  warehouses.forEach(wh => {
+    const el = document.getElementById('mwh_'+wh.id);
+    const ck = document.getElementById('mwhck_'+wh.id);
+    if(el && ck) {
+      el.classList.toggle('selected', wh.id===id);
+      ck.textContent = wh.id===id ? '✓' : '';
+    }
+  });
+}
+
+function submitOffer() {
+  if (!selectedModalWH) { showToast('⚠️ اختر مستودعاً أولاً'); return; }
+  const wh = warehouses.find(w => w.id === selectedModalWH);
+  closeModal('offerModal');
+  selectedModalWH = null;
+  showToast('✅ تم اختيار ' + wh.name + ' — Escrow قيد التفعيل');
+}
+
+// ── WAREHOUSE SELECTOR TOGGLE ──
+function toggleWHS(poId) {
+  const el = document.getElementById('whs-' + poId);
+  const isVisible = el.style.display !== 'none';
+  el.style.display = isVisible ? 'none' : 'block';
+  if (!isVisible) renderWHList(poId);
+}
+
+// ── MODALS ──
+function openAcceptModal() { document.getElementById('acceptModal').classList.add('open'); }
+function openConfirmModal() { document.getElementById('confirmModal').classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeAllModals() { document.querySelectorAll('.modal-ov').forEach(m => m.classList.remove('open')); }
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── INIT ──
+switchView('myorders');
+</script>
+</body>
+</html>
