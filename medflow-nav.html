@@ -34,6 +34,72 @@ html,body{min-height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;backgro
 .tag-done{background:rgba(0,181,166,.2);color:#5EEAD4}
 .tag-wip{background:rgba(253,230,138,.15);color:#FDE68A}
 .tag-next{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
+
+@media(max-width:768px){
+  /* Grids */
+  .kpi-row, .stats-row, .kpi-grid{grid-template-columns:1fr 1fr!important}
+  .g2, .g3, .cols, .settings-layout{grid-template-columns:1fr!important}
+  .bottom-row{grid-template-columns:1fr!important}
+  .orders-stats{grid-template-columns:1fr 1fr!important}
+  
+  /* Tables - make scrollable */
+  .tw{overflow-x:auto}
+  table{min-width:500px}
+  
+  /* Cards padding */
+  .card,.scard,.order-card,.contract-card,.client-card{padding:14px!important}
+  
+  /* Hero */
+  .order-hero,.seller-hero{padding:16px!important}
+  .oh-kpis,.sh-kpis{grid-template-columns:1fr 1fr!important}
+  
+  /* Tabs - scroll horizontal */
+  .tabs,.ftabs,.cat-tabs,.month-tabs,.view-tabs{overflow-x:auto;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch}
+  
+  /* Topbar - hide extra buttons */
+  .topbar{gap:8px}
+  
+  /* RFQ cols */
+  .cols{grid-template-columns:1fr!important}
+  
+  /* Finance */
+  .kpi-grid{grid-template-columns:1fr 1fr!important}
+  
+  /* Seller hero */
+  .sh-top{flex-wrap:wrap}
+  
+  /* Modal full screen on mobile */
+  .modal{max-width:100%!important;max-height:95vh!important;border-radius:16px 16px 0 0!important}
+  .modal-ov{align-items:flex-end!important;padding:0!important}
+  
+  /* Bids table */
+  .bids-table-wrap{overflow-x:auto}
+  .bids-table{min-width:600px}
+  
+  /* Charts */
+  .chart-bars,.chart-wrap{overflow-x:auto}
+  
+  /* Search hide on mobile */
+  .topbar .tb-search,.topbar .tb-search{display:none}
+}
+@media(max-width:400px){
+  .kpi-row,.stats-row,.kpi-grid,.orders-stats{grid-template-columns:1fr!important}
+  .oh-kpis,.sh-kpis{grid-template-columns:1fr 1fr!important}
+}
+
+
+@media(max-width:768px){
+  .sections{grid-template-columns:1fr 1fr!important;padding:0 16px 100px}
+  .hero{padding:32px 16px 24px}
+  .logo-name{font-size:22px}
+  .pc-icon{font-size:22px}
+  .pc-name{font-size:12px}
+  .pc-desc{font-size:10px}
+}
+@media(max-width:420px){
+  .sections{grid-template-columns:1fr!important}
+}
+
 </style>
 </head>
 <body>
@@ -162,5 +228,27 @@ html,body{min-height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;backgro
   </a>
 
 </div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav style="display:none;position:fixed;bottom:0;left:0;right:0;background:#0F1E36;border-top:1px solid rgba(255,255,255,.08);z-index:500;padding:8px 0 calc(8px + env(safe-area-inset-bottom))" id="mobNavBar">
+  <div style="display:flex;justify-content:space-around">
+    <a href="medflow-dashboard.html" style="display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;padding:4px 10px">
+      <span style="font-size:20px">📊</span><span style="font-size:9px;font-weight:700;color:rgba(255,255,255,.45)">الرئيسية</span>
+    </a>
+    <a href="medflow-orders-list.html" style="display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;padding:4px 10px">
+      <span style="font-size:20px">📋</span><span style="font-size:9px;font-weight:700;color:rgba(255,255,255,.45)">الطلبات</span>
+    </a>
+    <a href="medflow-rfq.html" style="display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;padding:4px 10px">
+      <span style="font-size:20px">🏪</span><span style="font-size:9px;font-weight:700;color:rgba(255,255,255,.45)">السوق</span>
+    </a>
+    <a href="#" style="display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;padding:4px 10px;background:rgba(0,181,166,.15);border-radius:10px">
+      <span style="font-size:20px">⋯</span><span style="font-size:9px;font-weight:700;color:#00B5A6">المزيد</span>
+    </a>
+  </div>
+</nav>
+<script>
+if(window.innerWidth<=768) document.getElementById('mobNavBar').style.display='block';
+</script>
+
 </body>
 </html>

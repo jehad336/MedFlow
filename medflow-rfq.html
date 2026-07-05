@@ -226,7 +226,101 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:
 .toast.show{opacity:1}
 
 @media(max-width:1000px){.orders-stats{grid-template-columns:1fr 1fr}}
-@media(max-width:720px){.sidebar{display:none}.content{padding:14px}}
+@media(max-width:768px){.sidebar{display:none!important}.content{padding:14px}}
+
+/* ══ MOBILE BOTTOM NAV ══ */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--navy2);border-top:1px solid rgba(255,255,255,.08);z-index:500;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+.mob-nav-inner{display:flex;justify-content:space-around;align-items:center}
+.mob-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:10px;cursor:pointer;text-decoration:none;min-width:52px;transition:all .15s}
+.mob-nav-item.active{background:rgba(0,181,166,.15)}
+.mob-nav-icon{font-size:20px;line-height:1}
+.mob-nav-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.45);white-space:nowrap}
+.mob-nav-item.active .mob-nav-label{color:var(--teal)}
+
+/* HAMBURGER */
+.mob-menu-btn{display:none;width:36px;height:36px;border-radius:9px;background:var(--paper);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:18px}
+
+/* MOBILE OVERLAY SIDEBAR */
+.mob-sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:none;opacity:0;transition:opacity .2s}
+.mob-sidebar-overlay.open{display:block;opacity:1}
+.sidebar.mob-open{transform:translateX(0)!important}
+
+@media(max-width:768px){
+  .mob-nav{display:block}
+  .mob-menu-btn{display:flex}
+  .sidebar{
+    display:flex!important;
+    position:fixed;
+    top:0;bottom:0;right:0;
+    width:260px;
+    z-index:950;
+    transform:translateX(100%);
+    transition:transform .25s ease;
+    box-shadow:-4px 0 20px rgba(0,0,0,.3)
+  }
+  .sidebar.mob-open{transform:translateX(0)}
+  .main{width:100%}
+  .content{padding:12px 14px;padding-bottom:80px!important}
+  .topbar{padding:0 14px;height:52px}
+  .tb-title{font-size:13px}
+  /* Hide text buttons in topbar on mobile */
+  .topbar .btn-out:not(.tb-keep){display:none}
+  .topbar .btn-teal{padding:6px 12px;font-size:11px}
+}
+
+
+@media(max-width:768px){
+  /* Grids */
+  .kpi-row, .stats-row, .kpi-grid{grid-template-columns:1fr 1fr!important}
+  .g2, .g3, .cols, .settings-layout{grid-template-columns:1fr!important}
+  .bottom-row{grid-template-columns:1fr!important}
+  .orders-stats{grid-template-columns:1fr 1fr!important}
+  
+  /* Tables - make scrollable */
+  .tw{overflow-x:auto}
+  table{min-width:500px}
+  
+  /* Cards padding */
+  .card,.scard,.order-card,.contract-card,.client-card{padding:14px!important}
+  
+  /* Hero */
+  .order-hero,.seller-hero{padding:16px!important}
+  .oh-kpis,.sh-kpis{grid-template-columns:1fr 1fr!important}
+  
+  /* Tabs - scroll horizontal */
+  .tabs,.ftabs,.cat-tabs,.month-tabs,.view-tabs{overflow-x:auto;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch}
+  
+  /* Topbar - hide extra buttons */
+  .topbar{gap:8px}
+  
+  /* RFQ cols */
+  .cols{grid-template-columns:1fr!important}
+  
+  /* Finance */
+  .kpi-grid{grid-template-columns:1fr 1fr!important}
+  
+  /* Seller hero */
+  .sh-top{flex-wrap:wrap}
+  
+  /* Modal full screen on mobile */
+  .modal{max-width:100%!important;max-height:95vh!important;border-radius:16px 16px 0 0!important}
+  .modal-ov{align-items:flex-end!important;padding:0!important}
+  
+  /* Bids table */
+  .bids-table-wrap{overflow-x:auto}
+  .bids-table{min-width:600px}
+  
+  /* Charts */
+  .chart-bars,.chart-wrap{overflow-x:auto}
+  
+  /* Search hide on mobile */
+  .topbar .tb-search,.topbar .tb-search{display:none}
+}
+@media(max-width:400px){
+  .kpi-row,.stats-row,.kpi-grid,.orders-stats{grid-template-columns:1fr!important}
+  .oh-kpis,.sh-kpis{grid-template-columns:1fr 1fr!important}
+}
+
 </style>
 </head>
 <body>
@@ -234,49 +328,38 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+    <div class="sidebar-logo">
+      <a href="medflow-nav.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+        <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-5.5-8-11A5.5 5.5 0 0 1 12 6.1 5.5 5.5 0 0 1 20 10c0 5.5-8 11-8 11Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13l2.5 3 5-6" stroke="#C8EDEA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-name">ميدفلو</div><div class="logo-sub">النظام المتكامل</div></div>
+      </a>
     </div>
-    <div><div class="logo-name">ميدفلو</div><div class="logo-sub">سوق الطلبيات</div></div>
-  </div>
-  <div class="nav-section">الرئيسية</div>
-  <a href="medflow-dashboard.html" class="nav-item">
-    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/></svg>
-    <span class="nav-label">لوحة التحكم</span>
-  </a>
-  <div class="nav-section">الطلبيات</div>
-  <a href="#" class="nav-item active" onclick="switchView('myorders');return false">
-    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 7h10M2 10h8M2 13h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
-    <span class="nav-label">طلبياتي</span>
-    <span class="nav-badge">4</span>
-  </a>
-  <a href="#" class="nav-item" onclick="switchView('incoming');return false">
-    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h12" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
-    <span class="nav-label">طلبيات واردة</span>
-    <span class="nav-badge">7</span>
-  </a>
-  <a href="#" class="nav-item" onclick="switchView('neworder');return false">
-    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M8 5v6M5 8h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
-    <span class="nav-label">طلبية جديدة</span>
-  </a>
-  <div class="nav-section">الصفقات</div>
-  <a href="#" class="nav-item">
-    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#fff" stroke-width="1.2"/><path d="M8 5v3l2 2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
-    <span class="nav-label">Escrow النشطة</span>
-    <span class="nav-badge" style="background:var(--amber)">3</span>
-  </a>
-  <a href="#" class="nav-item">
-    <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#fff" stroke-width="1.2"/><path d="M1 7h14" stroke="#fff" stroke-width="1.2"/></svg>
-    <span class="nav-label">التسويات</span>
-  </a>
-  <div class="sidebar-user">
-    <div class="user-av">جه</div>
-    <div><div class="user-name">جهاد اللهيبي</div><div class="user-role">مستودع مرخص · مكة</div></div>
-  </div>
+    <div class="nav-section">الرئيسية</div>
+    <a href="medflow-dashboard.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">لوحة التحكم</span></a>
+    <div class="nav-section">الطلبيات</div>
+    <a href="medflow-orders-list.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">جميع الطلبات</span></a>
+    <a href="medflow-rfq.html" class="nav-item active"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 6h8M2 9h10M2 12h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">سوق الطلبيات</span></a>
+    <div class="nav-section">المستودع</div>
+    <a href="medflow-products.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M1 6l7-4 7 4v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المنتجات</span></a>
+    <a href="medflow-inventory.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">المخزون</span></a>
+    <a href="medflow-sfda.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1l6 3v4c0 3.5-2.5 6.5-6 7.5C2.5 14.5 0 11.5 0 8V4l8-3Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">امتثال SFDA</span></a>
+    <div class="nav-section">الأطراف</div>
+    <a href="medflow-clients.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="10" r="3" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العملاء</span></a>
+    <a href="medflow-seller.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المسوّقون</span></a>
+    <a href="medflow-contracts.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h6M5 12h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العقود</span></a>
+    <div class="nav-section">المالية</div>
+    <a href="medflow-finance.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#fff" stroke-width="1.2"/><path d="M1 7h14" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">التسوية المالية</span></a>
+    <a href="medflow-invoices.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">الفواتير</span></a>
+    <a href="medflow-reports.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 7l3 3 5-7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">التقارير</span></a>
+    <div class="nav-section">النظام</div>
+    <a href="medflow-onboarding.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M8 5v6M5 8h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">تسجيل مسوّق</span></a>
+    <a href="medflow-settings.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="#fff" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">الإعدادات</span></a>
+    <a href="medflow-nav.html" class="nav-item" style="margin-top:auto"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">خريطة النظام</span></a>
+
+    <div class="sidebar-user">
+      <div class="user-av">جه</div>
+      <div><div class="user-name">جهاد اللهيبي</div><div class="user-role">مستودع مرخص · مكة</div></div>
+    </div>
 </aside>
 
 <!-- MAIN -->

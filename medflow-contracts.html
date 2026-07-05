@@ -75,7 +75,101 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
 @media(max-width:1000px){.cols{grid-template-columns:1fr}.stats-row{grid-template-columns:1fr 1fr}}
-@media(max-width:720px){.sidebar{display:none}}
+@media(max-width:768px){.sidebar{display:none!important}}
+
+/* ══ MOBILE BOTTOM NAV ══ */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--navy2);border-top:1px solid rgba(255,255,255,.08);z-index:500;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+.mob-nav-inner{display:flex;justify-content:space-around;align-items:center}
+.mob-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;border-radius:10px;cursor:pointer;text-decoration:none;min-width:52px;transition:all .15s}
+.mob-nav-item.active{background:rgba(0,181,166,.15)}
+.mob-nav-icon{font-size:20px;line-height:1}
+.mob-nav-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.45);white-space:nowrap}
+.mob-nav-item.active .mob-nav-label{color:var(--teal)}
+
+/* HAMBURGER */
+.mob-menu-btn{display:none;width:36px;height:36px;border-radius:9px;background:var(--paper);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:18px}
+
+/* MOBILE OVERLAY SIDEBAR */
+.mob-sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:none;opacity:0;transition:opacity .2s}
+.mob-sidebar-overlay.open{display:block;opacity:1}
+.sidebar.mob-open{transform:translateX(0)!important}
+
+@media(max-width:768px){
+  .mob-nav{display:block}
+  .mob-menu-btn{display:flex}
+  .sidebar{
+    display:flex!important;
+    position:fixed;
+    top:0;bottom:0;right:0;
+    width:260px;
+    z-index:950;
+    transform:translateX(100%);
+    transition:transform .25s ease;
+    box-shadow:-4px 0 20px rgba(0,0,0,.3)
+  }
+  .sidebar.mob-open{transform:translateX(0)}
+  .main{width:100%}
+  .content{padding:12px 14px;padding-bottom:80px!important}
+  .topbar{padding:0 14px;height:52px}
+  .tb-title{font-size:13px}
+  /* Hide text buttons in topbar on mobile */
+  .topbar .btn-out:not(.tb-keep){display:none}
+  .topbar .btn-teal{padding:6px 12px;font-size:11px}
+}
+
+
+@media(max-width:768px){
+  /* Grids */
+  .kpi-row, .stats-row, .kpi-grid{grid-template-columns:1fr 1fr!important}
+  .g2, .g3, .cols, .settings-layout{grid-template-columns:1fr!important}
+  .bottom-row{grid-template-columns:1fr!important}
+  .orders-stats{grid-template-columns:1fr 1fr!important}
+  
+  /* Tables - make scrollable */
+  .tw{overflow-x:auto}
+  table{min-width:500px}
+  
+  /* Cards padding */
+  .card,.scard,.order-card,.contract-card,.client-card{padding:14px!important}
+  
+  /* Hero */
+  .order-hero,.seller-hero{padding:16px!important}
+  .oh-kpis,.sh-kpis{grid-template-columns:1fr 1fr!important}
+  
+  /* Tabs - scroll horizontal */
+  .tabs,.ftabs,.cat-tabs,.month-tabs,.view-tabs{overflow-x:auto;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch}
+  
+  /* Topbar - hide extra buttons */
+  .topbar{gap:8px}
+  
+  /* RFQ cols */
+  .cols{grid-template-columns:1fr!important}
+  
+  /* Finance */
+  .kpi-grid{grid-template-columns:1fr 1fr!important}
+  
+  /* Seller hero */
+  .sh-top{flex-wrap:wrap}
+  
+  /* Modal full screen on mobile */
+  .modal{max-width:100%!important;max-height:95vh!important;border-radius:16px 16px 0 0!important}
+  .modal-ov{align-items:flex-end!important;padding:0!important}
+  
+  /* Bids table */
+  .bids-table-wrap{overflow-x:auto}
+  .bids-table{min-width:600px}
+  
+  /* Charts */
+  .chart-bars,.chart-wrap{overflow-x:auto}
+  
+  /* Search hide on mobile */
+  .topbar .tb-search,.topbar .tb-search{display:none}
+}
+@media(max-width:400px){
+  .kpi-row,.stats-row,.kpi-grid,.orders-stats{grid-template-columns:1fr!important}
+  .oh-kpis,.sh-kpis{grid-template-columns:1fr 1fr!important}
+}
+
 </style>
 </head>
 <body>

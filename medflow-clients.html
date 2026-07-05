@@ -2,9 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ميدفلو — التقارير</title>
+<title>ميدفلو — العملاء</title>
 <style>
-:root{--teal:#00B5A6;--teal2:#008F83;--teall:#F0FAFA;--tealm:#C8EDEA;--navy:#1B2B4B;--navy2:#0F1E36;--paper:#F5F7FA;--paper2:#ECEEF3;--paper3:#E2E6EE;--white:#fff;--ink:#1B2B4B;--ink2:#3D536F;--ink3:#7A90A8;--green:#059669;--greenl:#ECFDF5;--amber:#D97706;--amberl:#FFFBEB;--red:#DC2626;--redl:#FEF2F2;--blue:#2563EB;--bluel:#EFF6FF;--purple:#7C3AED;--purplel:#F5F3FF;--border:#DDE3EE;--shadow:0 1px 3px rgba(27,43,75,.08);--shadow2:0 6px 20px rgba(27,43,75,.11);--sidebar:220px}
+:root{--teal:#00B5A6;--teal2:#008F83;--teall:#F0FAFA;--tealm:#C8EDEA;--navy:#1B2B4B;--navy2:#0F1E36;--paper:#F5F7FA;--paper2:#ECEEF3;--paper3:#E2E6EE;--white:#fff;--ink:#1B2B4B;--ink2:#3D536F;--ink3:#7A90A8;--green:#059669;--greenl:#ECFDF5;--amber:#D97706;--amberl:#FFFBEB;--red:#DC2626;--redl:#FEF2F2;--border:#DDE3EE;--shadow:0 1px 3px rgba(27,43,75,.08);--shadow2:0 6px 20px rgba(27,43,75,.11);--sidebar:220px}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--paper);color:var(--ink);direction:rtl;font-size:14px}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:4px}
@@ -24,40 +24,46 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:12px;flex-shrink:0}
 .tb-title{font-size:15px;font-weight:800;color:var(--navy)}.tb-spacer{flex:1}
+.tb-search{display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--border);border-radius:9px;padding:7px 12px;width:240px}
+.tb-search input{border:none;background:transparent;font-size:12px;color:var(--ink);outline:none;width:100%;direction:rtl}
 .btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
 .btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:var(--teal2)}
 .btn-out{background:transparent;border:1px solid var(--border);color:var(--ink2)}.btn-out:hover{background:var(--paper)}
 .btn-sm{padding:6px 12px;font-size:11px}
 .content{flex:1;overflow-y:auto;padding:20px 24px}
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.kpi{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-.kpi::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:var(--ka,var(--teal))}
-.kpi-v{font-size:22px;font-weight:900;color:var(--navy);line-height:1;margin-bottom:4px}
-.kpi-l{font-size:11px;color:var(--ink3);font-weight:600}
-.kpi-s{font-size:10px;margin-top:4px;font-weight:700}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
-.card{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:18px;box-shadow:var(--shadow)}
-.card-title{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-.chart-wrap{display:flex;align-items:flex-end;gap:4px;height:100px}
-.ch-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
-.ch-bar{width:100%;border-radius:4px 4px 0 0}
-.ch-lbl{font-size:9px;color:var(--ink3);font-weight:600}
-.top-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--paper2);font-size:12px}
-.top-row:last-child{border-bottom:none}
-.top-rank{width:22px;height:22px;border-radius:6px;background:var(--teal);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.top-rank.gold{background:#F59E0B}
-.top-rank.silver{background:#94A3B8}
-.top-rank.bronze{background:#92400E}
-.city-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.city-name{font-size:11px;color:var(--ink2);width:70px;flex-shrink:0;font-weight:600}
-.city-bar-wrap{flex:1}
-.city-bar-bg{height:8px;background:var(--paper3);border-radius:8px;overflow:hidden}
-.city-bar-fill{height:100%;border-radius:8px}
-.city-val{font-size:11px;font-weight:700;color:var(--navy);width:60px;text-align:left;flex-shrink:0}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px}
+.stat-ic{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.stat-v{font-size:18px;font-weight:900;color:var(--navy);line-height:1}.stat-l{font-size:10px;color:var(--ink3);font-weight:600;margin-top:2px}
+.clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.client-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s}
+.client-card:hover{box-shadow:var(--shadow2);transform:translateY(-2px);border-color:var(--tealm)}
+.cc-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.cc-av{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0}
+.cc-name{font-size:13px;font-weight:800;color:var(--navy)}
+.cc-type{font-size:10px;color:var(--ink3);margin-top:2px}
+.cc-city{font-size:10px;color:var(--ink3)}
+.cc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.cc-stat{background:var(--paper);border-radius:8px;padding:8px;text-align:center}
+.cc-stat-v{font-size:13px;font-weight:900;color:var(--navy);line-height:1}
+.cc-stat-l{font-size:9px;color:var(--ink3);margin-top:2px;font-weight:600}
+.cc-footer{display:flex;align-items:center;justify-content:space-between}
+.b{display:inline-flex;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800}
+.bg{background:var(--greenl);color:var(--green)}.ba{background:var(--amberl);color:var(--amber)}.bt{background:var(--teall);color:var(--teal2)}
+.modal-ov{position:fixed;inset:0;background:rgba(15,30,54,.55);backdrop-filter:blur(5px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.modal{background:var(--white);border-radius:16px;width:100%;max-width:460px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.22)}
+.modal-hd{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.modal-ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.modal-title{font-size:14px;font-weight:800;color:var(--navy);flex:1}
+.modal-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+.modal-body{padding:18px 20px}.modal-ft{padding:13px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.fi{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fl{font-size:11px;font-weight:800;color:var(--navy)}.fh{font-size:10px;color:var(--ink3)}
+.fi input,.fi select{border:1px solid var(--border);border-radius:9px;padding:8px 11px;font-size:12px;color:var(--ink);background:var(--paper);outline:none;direction:rtl;font-family:inherit;transition:border-color .15s;width:100%}
+.fi input:focus,.fi select:focus{border-color:var(--teal);background:var(--white)}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:700;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
-@media(max-width:1100px){.kpi-grid{grid-template-columns:1fr 1fr}.g2,.g3{grid-template-columns:1fr}}
 @media(max-width:768px){.sidebar{display:none!important}}
 
 /* ══ MOBILE BOTTOM NAV ══ */
@@ -174,13 +180,13 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:
     <a href="medflow-inventory.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">المخزون</span></a>
     <a href="medflow-sfda.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1l6 3v4c0 3.5-2.5 6.5-6 7.5C2.5 14.5 0 11.5 0 8V4l8-3Z" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">امتثال SFDA</span></a>
     <div class="nav-section">الأطراف</div>
-    <a href="medflow-clients.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="10" r="3" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العملاء</span></a>
+    <a href="medflow-clients.html" class="nav-item active"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M1 14c0-2.76 2.24-5 5-5" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="10" r="3" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العملاء</span></a>
     <a href="medflow-seller.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#fff" stroke-width="1.2"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">المسوّقون</span></a>
     <a href="medflow-contracts.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h6M5 12h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">العقود</span></a>
     <div class="nav-section">المالية</div>
     <a href="medflow-finance.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#fff" stroke-width="1.2"/><path d="M1 7h14" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">التسوية المالية</span></a>
     <a href="medflow-invoices.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="#fff" stroke-width="1.2"/><path d="M5 6h6M5 9h4" stroke="#fff" stroke-width="1.2"/></svg><span class="nav-label">الفواتير</span></a>
-    <a href="medflow-reports.html" class="nav-item active"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 7l3 3 5-7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">التقارير</span></a>
+    <a href="medflow-reports.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 7l3 3 5-7" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">التقارير</span></a>
     <div class="nav-section">النظام</div>
     <a href="medflow-onboarding.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#fff" stroke-width="1.2"/><path d="M8 5v6M5 8h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">تسجيل مسوّق</span></a>
     <a href="medflow-settings.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="#fff" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg><span class="nav-label">الإعدادات</span></a>
@@ -193,135 +199,78 @@ html,body{height:100%;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:
 </aside>
 <div class="main">
   <div class="topbar">
-    <div class="tb-title">📈 التقارير</div>
+    <div class="tb-title">العملاء والمشترون</div>
     <div class="tb-spacer"></div>
-    <select style="border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:11px;background:var(--white);outline:none;direction:rtl"><option>يوليو 2026</option><option>الربع الثالث 2026</option><option>النصف الأول 2026</option></select>
-    <button class="btn btn-out btn-sm" onclick="showToast('تصدير التقرير...')">📤 تصدير Excel</button>
-    <button class="btn btn-teal btn-sm" onclick="showToast('إنشاء تقرير PDF...')">📄 PDF</button>
+    <div class="tb-search"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="#7A90A8" stroke-width="1.4"/><path d="M11 11l3 3" stroke="#7A90A8" stroke-width="1.4" stroke-linecap="round"/></svg><input type="text" placeholder="ابحث عن عميل..."></div>
+    <button class="btn btn-teal btn-sm" onclick="document.getElementById('addModal').classList.add('open')">+ إضافة عميل</button>
   </div>
   <div class="content">
-    <div class="kpi-grid">
-      <div class="kpi" style="--ka:var(--teal)"><div class="kpi-v">1,420,000 ﷼</div><div class="kpi-l">إجمالي المبيعات</div><div class="kpi-s" style="color:var(--green)">↑ 18% عن الشهر الماضي</div></div>
-      <div class="kpi" style="--ka:var(--green)"><div class="kpi-v">89</div><div class="kpi-l">طلب مكتمل</div><div class="kpi-s" style="color:var(--green)">↑ 12% عن الشهر الماضي</div></div>
-      <div class="kpi" style="--ka:var(--amber)"><div class="kpi-v">51,000 ﷼</div><div class="kpi-l">إيراد ميدفلو</div><div class="kpi-s" style="color:var(--green)">↑ 21% عن الشهر الماضي</div></div>
-      <div class="kpi" style="--ka:var(--blue)"><div class="kpi-v">4.8 ⭐</div><div class="kpi-l">متوسط تقييم الموردين</div><div class="kpi-s" style="color:var(--ink3)">من 47 تقييم</div></div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-ic" style="background:var(--teall)">🏥</div><div><div class="stat-v">47</div><div class="stat-l">إجمالي العملاء</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:#EFF6FF">💊</div><div><div class="stat-v">28</div><div class="stat-l">صيدليات</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--greenl)">🏨</div><div><div class="stat-v">12</div><div class="stat-l">مستشفيات وعيادات</div></div></div>
+      <div class="stat"><div class="stat-ic" style="background:var(--amberl)">🏢</div><div><div class="stat-v">7</div><div class="stat-l">مستودعات أخرى</div></div></div>
     </div>
-    <!-- SALES CHART -->
-    <div class="card" style="margin-bottom:16px">
-      <div class="card-title">📊 المبيعات الشهرية — 2026 (﷼)
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-out btn-sm" onclick="showToast('عرض بياني...')">بياني</button>
-          <button class="btn btn-teal btn-sm" onclick="showToast('تصدير...')">📤</button>
-        </div>
-      </div>
-      <div class="chart-wrap" id="salesChart"></div>
-      <div style="display:flex;justify-content:space-around;margin-top:8px;font-size:9px;color:var(--ink3)">
-        <span>يناير</span><span>فبراير</span><span>مارس</span><span>أبريل</span><span>مايو</span><span>يونيو</span><span style="color:var(--teal2);font-weight:800">يوليو</span>
-      </div>
-    </div>
-
-    <div class="g2">
-      <!-- TOP SELLERS -->
-      <div class="card">
-        <div class="card-title">🏆 أفضل المسوّقين — يوليو</div>
-        <div id="topSellers"></div>
-      </div>
-      <!-- TOP PRODUCTS -->
-      <div class="card">
-        <div class="card-title">📦 أكثر المنتجات مبيعاً</div>
-        <div id="topProducts"></div>
-      </div>
-    </div>
-
-    <div class="g2">
-      <!-- CITY BREAKDOWN -->
-      <div class="card">
-        <div class="card-title">📍 المبيعات حسب المدينة</div>
-        <div id="citySales"></div>
-      </div>
-      <!-- CATEGORY -->
-      <div class="card">
-        <div class="card-title">🗂️ المبيعات حسب الفئة</div>
-        <div id="catSales"></div>
-      </div>
-    </div>
+    <div class="clients-grid" id="clientsGrid"></div>
   </div>
 </div>
+</div>
+<!-- ADD MODAL -->
+<div class="modal-ov" id="addModal">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-ic" style="background:var(--teall)">🏥</div><span class="modal-title">إضافة عميل جديد</span><div class="modal-close" onclick="this.closest('.modal-ov').classList.remove('open')">✕</div></div>
+    <div class="modal-body">
+      <div class="fi"><label class="fl">اسم المنشأة</label><input type="text" placeholder="صيدلية / عيادة / مستشفى..."></div>
+      <div class="fi-row">
+        <div class="fi"><label class="fl">النوع</label><select><option>صيدلية</option><option>عيادة</option><option>مستشفى خاص</option><option>مستودع طبي</option></select></div>
+        <div class="fi"><label class="fl">المدينة</label><select><option>مكة</option><option>الرياض</option><option>جدة</option><option>الدمام</option></select></div>
+      </div>
+      <div class="fi"><label class="fl">رقم الجوال</label><input type="tel" placeholder="05XXXXXXXX"></div>
+      <div class="fi"><label class="fl">ترخيص SFDA</label><input type="text" placeholder="SA-RX-XXXX-XXXXX"></div>
+      <div class="fi"><label class="fl">العنوان</label><input type="text" placeholder="الحي، الشارع..."></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-out" onclick="this.closest('.modal-ov').classList.remove('open')">إلغاء</button>
+      <button class="btn btn-teal" onclick="this.closest('.modal-ov').classList.remove('open');showToast('✅ تم إضافة العميل')">حفظ</button>
+    </div>
+  </div>
 </div>
 <div class="toast" id="toast"></div>
 <script>
-// SALES CHART
-const monthly=[420,580,710,890,1020,1190,1420];
-const maxM=Math.max(...monthly);
-document.getElementById('salesChart').innerHTML=monthly.map((v,i)=>`
-  <div class="ch-col">
-    <div style="font-size:9px;color:var(--ink2);font-weight:700;margin-bottom:2px">${v}K</div>
-    <div class="ch-bar" style="height:${Math.round(v/maxM*90)}%;background:${i===6?'var(--teal)':'var(--tealm)'}"></div>
-  </div>
-`).join('');
-
-// TOP SELLERS
-const sellers=[
-  {name:'نورة الزهراني',city:'المدينة',sales:'312K',rank:'gold'},
-  {name:'أحمد الغامدي',city:'الرياض',sales:'218K',rank:'silver'},
-  {name:'محمد العتيبي',city:'الدمام',sales:'187K',rank:'bronze'},
-  {name:'جهاد اللهيبي',city:'مكة',sales:'142K',rank:'4'},
-  {name:'سارة المالكي',city:'جدة',sales:'98K',rank:'5'},
+const clients=[
+  {name:'صيدلية الشفاء',type:'صيدلية',city:'الرياض',av:'شف',color:'#059669',orders:14,value:'142K',rating:'4.9',status:'active'},
+  {name:'مستشفى الأمل الخاص',type:'مستشفى',city:'جدة',av:'أمل',color:'#2563EB',orders:8,value:'380K',rating:'4.8',status:'active'},
+  {name:'عيادة النور التخصصية',type:'عيادة',city:'مكة',av:'نور',color:'#7C3AED',orders:6,value:'89K',rating:'4.7',status:'active'},
+  {name:'صيدلية الرعاية',type:'صيدلية',city:'مكة',av:'رع',color:'#D97706',orders:22,value:'215K',rating:'4.9',status:'active'},
+  {name:'مركز صحي الأمير',type:'عيادة',city:'الرياض',av:'أمر',color:'#DC2626',orders:3,value:'67K',rating:'3.8',status:'dispute'},
+  {name:'مستشفى الملك فيصل',type:'مستشفى',city:'جدة',av:'ملك',color:'#0EA5E9',orders:5,value:'380K',rating:'4.9',status:'active'},
+  {name:'صيدلية الأمانة',type:'صيدلية',city:'مكة',av:'أمن',color:'#059669',orders:11,value:'54K',rating:'4.6',status:'active'},
+  {name:'عيادة سكين',type:'عيادة',city:'الرياض',av:'سك',color:'#7C3AED',orders:4,value:'28K',rating:'4.8',status:'active'},
 ];
-document.getElementById('topSellers').innerHTML=sellers.map((s,i)=>`
-  <div class="top-row">
-    <div class="top-rank ${s.rank==='gold'?'gold':s.rank==='silver'?'silver':s.rank==='bronze'?'bronze':''}">${s.rank==='gold'?'🥇':s.rank==='silver'?'🥈':s.rank==='bronze'?'🥉':i+1}</div>
-    <div style="flex:1;padding:0 10px"><div style="font-weight:700;font-size:12px;color:var(--navy)">${s.name}</div><div style="font-size:10px;color:var(--ink3)">${s.city}</div></div>
-    <div style="font-weight:800;color:var(--teal2)">${s.sales} ﷼</div>
+const stMap={active:'نشط',dispute:'نزاع'};
+const stBg={active:'bg',dispute:'br'};
+document.getElementById('clientsGrid').innerHTML=clients.map(c=>`
+  <div class="client-card" onclick="showToast('فتح ملف ${c.name}')">
+    <div class="cc-top">
+      <div class="cc-av" style="background:${c.color}">${c.av}</div>
+      <div style="flex:1">
+        <div class="cc-name">${c.name}</div>
+        <div class="cc-type">${c.type}</div>
+        <div class="cc-city">📍 ${c.city}</div>
+      </div>
+      <span class="b ${stBg[c.status]}">${stMap[c.status]}</span>
+    </div>
+    <div class="cc-stats">
+      <div class="cc-stat"><div class="cc-stat-v">${c.orders}</div><div class="cc-stat-l">طلب</div></div>
+      <div class="cc-stat"><div class="cc-stat-v" style="color:var(--teal2)">${c.value} ﷼</div><div class="cc-stat-l">مبيعات</div></div>
+      <div class="cc-stat"><div class="cc-stat-v">${c.rating} ⭐</div><div class="cc-stat-l">تقييم</div></div>
+    </div>
+    <div class="cc-footer">
+      <span style="font-size:10px;color:var(--ink3)">آخر طلب: اليوم</span>
+      <button class="btn btn-out btn-sm" onclick="event.stopPropagation();window.location='medflow-orders-list.html'">الطلبات</button>
+    </div>
   </div>
 `).join('');
-
-// TOP PRODUCTS
-const prods=[
-  {name:'🩹 ضمادات 10×15',sales:'1,203 وحدة'},
-  {name:'💉 محقنة 5ml',sales:'3,201 وحدة'},
-  {name:'💊 باراسيتامول',sales:'892 وحدة'},
-  {name:'☀️ فيتامين D3',sales:'712 وحدة'},
-  {name:'🧤 قفازات لاتكس',sales:'654 وحدة'},
-];
-document.getElementById('topProducts').innerHTML=prods.map((p,i)=>`
-  <div class="top-row">
-    <div class="top-rank" style="background:var(--paper2);color:var(--ink2)">${i+1}</div>
-    <div style="flex:1;padding:0 10px;font-weight:700;font-size:12px;color:var(--navy)">${p.name}</div>
-    <div style="font-size:11px;color:var(--teal2);font-weight:700">${p.sales}</div>
-  </div>
-`).join('');
-
-// CITY SALES
-const cities=[
-  {name:'مكة',pct:38,val:'539K',color:'var(--teal)'},
-  {name:'الرياض',pct:29,val:'412K',color:'var(--blue)'},
-  {name:'جدة',pct:18,val:'256K',color:'var(--purple,#7C3AED)'},
-  {name:'الدمام',pct:10,val:'142K',color:'var(--amber)'},
-  {name:'المدينة',pct:5,val:'71K',color:'var(--green)'},
-];
-document.getElementById('citySales').innerHTML=cities.map(c=>`
-  <div class="city-bar">
-    <div class="city-name">${c.name}</div>
-    <div class="city-bar-wrap"><div class="city-bar-bg"><div class="city-bar-fill" style="width:${c.pct}%;background:${c.color}"></div></div></div>
-    <div class="city-val">${c.val} ﷼</div>
-  </div>
-`).join('');
-
-// CAT SALES
-const cats=[
-  {name:'💊 أدوية',pct:48,val:'682K',color:'var(--blue)'},
-  {name:'🩺 مستلزمات',pct:34,val:'483K',color:'var(--teal)'},
-  {name:'✨ تجميل طبي',pct:18,val:'256K',color:'#7C3AED'},
-];
-document.getElementById('catSales').innerHTML=cats.map(c=>`
-  <div class="city-bar">
-    <div class="city-name" style="width:90px">${c.name}</div>
-    <div class="city-bar-wrap"><div class="city-bar-bg"><div class="city-bar-fill" style="width:${c.pct}%;background:${c.color}"></div></div></div>
-    <div class="city-val">${c.val} ﷼</div>
-  </div>
-`).join('');
-
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
 </script>
 </body>
